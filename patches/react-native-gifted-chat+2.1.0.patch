@@ -1,0 +1,24 @@
+diff --git a/node_modules/react-native-gifted-chat/lib/MessageContainer.js b/node_modules/react-native-gifted-chat/lib/MessageContainer.js
+index 6bdf6da..aae97e3 100644
+--- a/node_modules/react-native-gifted-chat/lib/MessageContainer.js
++++ b/node_modules/react-native-gifted-chat/lib/MessageContainer.js
+@@ -125,7 +125,6 @@ export default class MessageContainer extends React.PureComponent {
+                 const messageProps = {
+                     ...restProps,
+                     user,
+-                    key: item._id,
+                     currentMessage: item,
+                     previousMessage,
+                     inverted,
+@@ -133,9 +132,9 @@ export default class MessageContainer extends React.PureComponent {
+                     position: item.user._id === user._id ? 'right' : 'left',
+                 };
+                 if (this.props.renderMessage) {
+-                    return this.props.renderMessage(messageProps);
++                    return this.props.renderMessage({ key: item._id, ...messageProps });
+                 }
+-                return <Message {...messageProps}/>;
++                return <Message key={item._id} {...messageProps}/>;
+             }
+             return null;
+         };

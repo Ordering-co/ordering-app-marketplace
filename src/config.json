@@ -1,0 +1,25 @@
+{
+  "app_id": "app_marketplace_26",
+  "app_internal_name": "ordering_app",
+  "notification_app": "orderingapp",
+  "app_name": "OrderingPlus",
+  "apple_app_id": "com.ordering.app1",
+  "android_app_id": "com.reactnativeappstemplate5",
+  "merchantId": "com.ordering.v5app5",
+  "project": "YOUR_PROJECT",
+  "api": {
+    "url": "https://api.orderingplus.com",
+    "language": "en",
+    "version": "v400"
+  },
+  "socket": {
+    "url": "https://sockets.orderingplus.com"
+  },
+  "franchiseSlug": null,
+  "businessSlug": null,
+  "show_tutorials": false,
+  "useOptimizeLoad": true,
+  "app_scheme": "orderingapp",
+  "use_root_point": false,
+  "cookie_consent_enabled": false
+}

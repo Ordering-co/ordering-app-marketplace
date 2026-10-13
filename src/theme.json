@@ -1,0 +1,774 @@
+{
+	"utils": {
+		"tsize": {
+			"xxxl": 36,
+			"xxl": 30,
+			"xl": 25,
+			"l": 20,
+			"m": 16,
+			"s": 14,
+			"xs": 12
+		},
+		"typography": {
+			"screenTitle": { "size": 20, "weight": "700", "lineHeight": 26 },
+			"sectionTitle": { "size": 16, "weight": "700", "lineHeight": 22 },
+			"cardTitle": { "size": 16, "weight": "600", "lineHeight": 22 },
+			"body": { "size": 14, "weight": "400", "lineHeight": 20 },
+			"caption": { "size": 12, "weight": "400", "lineHeight": 16 }
+		},
+		"radius": {
+			"l": 10,
+			"m": 5
+		},
+		"margins": {
+			"horizontal": 20
+		},
+		"zi": {
+			"xxl": 30000,
+			"xl": 10000,
+			"l": 9999
+		}
+	},
+	"colors": {
+		"primary": "#000000",
+		"secondary": "#FFFFFF",
+		"secondaryContrast": "#D8D8D8",
+		"third": "#FFFFFF",
+		"backgroundPage": "#FFFFFF",
+		"active": "#21BC9E",
+		"activeContrast": "#D6FFF7",
+		"danger": "#E63757",
+		"dangerContrast": "#FEEDF0",
+		"alert": "#E9ECEF",
+		"alertText": "#000000",
+		"disabled": "#D8D8D8",
+		"backgroundGray100": "#F8F9FA",
+		"backgroundGray200": "#E9ECEF",
+		"backgroundGray300": "#909BA9",
+		"businessHeaderPlaceholder": "#EEF1F4",
+		"black": "#000000",
+		"white": "#FFFFFF",
+		"borderColor": "rgba(0, 0, 0, 0.1)",
+		"success500": "#00D27A",
+		"border": "#E9ECEF",
+		"star": "#FFC700",
+
+
+
+		"primaryContrast": "#E9F2FE",
+		"lightPrimary": "#F5F9FF",
+		"secundaryContrast": "#000",
+		"disabledContrast": "#000",
+		"colorPage": "#333",
+		"red": "#D83520",
+		"skyBlue": "#1977F2",
+
+		"whiteGray": "#f7f6f3",
+		"dusk": "rgb(65,77,107)",
+		"green": "#0CAD63",
+		"mediumGray": "rgb(134,154,183)",
+		"paleGray": "#FAFAFA",
+		"lightGray": "#D2D2D2",
+		"backgroundLight": "white",
+		"backgroundDark": "#484848",
+		"backgroundGray": "#CCCCCC",
+
+		"backgroundGray400": "#CED4DA",
+		"clear": "transparent",
+		"error": "#C90800",
+		"success": "#90C68E",
+		"btnFont": "black",
+		"inputDisabled": "#F7F7F7",
+		"textSecondary": "#858585",
+		"textThird": "#748194",
+		"editColor": "#F2BB40",
+		"cancelColor": "#D81212",
+
+
+		"textNormal": "#344050",
+		"warning5": "#FFC700",
+		"warning1": "#FFF4CC",
+		"inputBorderColor": "#DEE2E6",
+		"darkText": "#414954",
+
+		"inputChat": "#F8F9FA",
+		"textGray": "#344050",
+		"backArrow": "#748194"
+	},
+	"images": {
+		"logos": {
+			"logotype": "",
+			"logotypeInvert": ""
+		},
+		"tutorials": {
+			"slide1": "",
+			"slide2": "",
+			"slide3": "",
+			"slide4": "",
+			"slide5": "",
+			"slide6": ""
+		},
+		"general": {
+			"add": "",
+			"homeHero": "",
+			"appointment": "",
+			"notFound": "",
+			"emptyActiveOrders": "",
+			"emptyPastOrders": "",
+			"menu": "",
+			"lunch": "",
+			"arrow_up": "",
+			"arrow_left": "",
+			"arrow_right": "",
+			"arrow_down": "",
+			"map": "",
+			"marker": "",
+			"email": "",
+			"lock": "",
+			"camera": "",
+			"send": "",
+			"support": "",
+			"trash": "",
+			"phone": "",
+			"mail": "",
+			"chat": "",
+			"user": "",
+			"menulogout": "",
+			"cash": "",
+			"carddelivery": "",
+			"paypal": "",
+			"stripe": "",
+			"stripecc": "",
+			"stripes": "",
+			"stripesb": "",
+			"creditCard": "",
+			"google": "",
+			"pin": "",
+			"tag_home": "",
+			"tag_building": "",
+			"tag_heart": "",
+			"tag_plus": "",
+			"option_normal": "",
+			"option_checked": "",
+			"chevron_right": "",
+			"chevron_left": "",
+			"clock": "",
+			"pencil": "",
+			"search": "",
+			"star": "",
+			"info": "",
+			"close": "",
+			"plus": "",
+			"minus": "",
+			"radio_nor": "",
+			"radio_act": "",
+			"check_nor": "",
+			"check_act": "",
+			"half_l": "",
+			"half_f": "",
+			"half_r": "",
+			"drop_up": "",
+			"drop_down": "",
+			"tiktok": "",
+			"logout": "",
+			"language": "",
+			"ic_help": "",
+			"enter": "",
+			"attach": "",
+			"image": "",
+			"help": "",
+			"noNetwork": "",
+			"applePayMark": "",
+			"googlePayMark": "",
+			"heart": "",
+			"driverPng": "",
+			"arrow_bar_right": "",
+			"delivery_fee": "",
+			"wallet_credit_point": "",
+			"wallet_cash": "",
+			"giftCardImage": "",
+			"giftCard5": "",
+			"giftCard10": "",
+			"giftCard25": "",
+			"giftCard50": "",
+			"giftCard100": "",
+			"pin_map": "",
+			"ranking": ""
+		},
+		"backgrounds": {
+			"business_list_header": ""
+		},
+		"order": {
+			"status0": "",
+			"status1": "",
+			"status2": "",
+			"status3": "",
+			"status4": "",
+			"status5": "",
+			"status6": "",
+			"status7": "",
+			"status8": "",
+			"status9": "",
+			"status10": "",
+			"status11": "",
+			"status12": "",
+			"status13": ""
+		},
+		"categories": {
+			"all": ""
+		},
+		"dummies": {
+			"product": "",
+			"businessHeader": "",
+			"businessLogo": "",
+			"driverPhoto": "",
+			"customerPhoto": "",
+			"loyaltyLevel": "",
+			"giftCard": ""
+		},
+		"tabs": {
+			"explorer": "",
+			"promotions": "",
+			"my_carts": "",
+			"orders": "",
+			"profile": "",
+			"wallets": "",
+			"rewards": ""
+		},
+		"orderTypes": {
+			"type1": "",
+			"type2": "",
+			"type3": "",
+			"type4": "",
+			"type5": "",
+			"type7": "",
+			"type8": ""
+		}
+	},
+	"layouts": {
+		"general": {
+			"components": {
+				"layout": {
+					"type": "original"
+				},
+				"fonts": {
+					"primary": {
+						"name": "",
+						"weights": [],
+						"href": ""
+					}
+				},
+				"buttons": {
+					"borderRadius": ""
+				},
+				"inputs": {
+					"borderRadius": "",
+					"color": "",
+					"borderColor": ""
+				},
+				"search_bar": {
+					"color": ""
+				},
+				"modal": {
+					"components": {
+						"style": {
+							"borderRadius": ""
+						}
+					}
+				},
+				"social_share": {
+					"components": {
+						"title": "",
+						"description": ""
+					}
+				}
+			}
+		},
+		"business_listing_view": {
+			"components": {
+				"layout": {
+					"type": "original",
+					"rows": 3
+				},
+				"business_hero": {
+					"hidden": false,
+					"components": {
+						"style": {
+							"height": "270px"
+						},
+						"image": ""
+					}
+				},
+				"business": {
+					"components": {
+						"logo": {
+							"hidden": false
+						},
+						"fee": {
+							"hidden": false
+						},
+						"time": {
+							"hidden": false
+						},
+						"distance": {
+							"hidden": false
+						},
+						"reviews": {
+							"hidden": false
+						},
+						"favorite": {
+							"hidden": false
+						},
+						"offer": {
+							"hidden": false
+						},
+						"featured_badge": {
+							"hidden": false
+						},
+						"header": {
+							"hidden": false
+						}
+					}
+				},
+				"cities": {
+					"hidden": false
+				},
+				"previous_orders_block": {
+					"hidden": false
+				},
+				"highest_rated_business_block": {
+					"hidden": false
+				},
+				"categories": {
+					"hidden": false
+				}
+			}
+		},
+		"business_view": {
+			"components": {
+				"layout": {
+					"type": "original"
+				},
+				"cart": {
+					"hidden": false,
+					"components": {
+						"comments": {
+							"hidden": false
+						},
+						"discount_coupon": {
+							"hidden": false
+						}
+					}
+				},
+				"reviews": {
+					"components": {
+						"ranking": {
+							"hidden": false
+						},
+						"customer_comments": {
+							"hidden": false
+						},
+						"review_date": {
+							"hidden": false
+						},
+						"search": {
+							"hidden": false
+						}
+					}
+				},
+				"header": {
+					"hidden": false,
+					"components": {
+						"layout": {
+							"type": "original",
+							"position": "normal"
+						},
+						"business": {
+							"components": {
+								"logo": {
+									"hidden": false
+								},
+								"time": {
+									"hidden": false
+								}
+							}
+						},
+						"logo": {
+							"hidden": false
+						},
+						"delivery_fee": {
+							"hidden": false
+						},
+						"time": {
+							"hidden": false
+						},
+						"distance": {
+							"hidden": false
+						},
+						"reviews": {
+							"hidden": false
+						},
+						"business_info": {
+							"hidden": false
+						},
+						"offer": {
+							"hidden": false
+						},
+						"sort": {
+							"hidden": false
+						},
+						"favorite": {
+							"hidden": false
+						}
+					}
+				},
+				"product_search": {
+					"hidden": false,
+					"components": {
+						"layout": {
+							"type": "original"
+						}
+					}
+				},
+				"information": {
+					"components": {
+						"location": {
+							"hidden": false
+						},
+						"schedule": {
+							"hidden": false
+						}
+					}
+				},
+				"products": {
+					"components": {
+						"photo": {
+							"hidden": false
+						},
+						"product": {
+							"components": {
+								"description": {
+									"hidden": false
+								},
+								"image": {
+									"hidden": false,
+									"position": "left"
+								},
+								"add_to_cart_button": {
+									"hidden": false
+								}
+							}
+						}
+					}
+				},
+				"order_view_button": {
+					"hidden": true
+				},
+				"products_ordered": {
+					"hidden": true
+				},
+				"favorite_products": {
+					"hidden": false
+				},
+				"near_business": {
+					"hidden": false
+				},
+				"style": {
+					"backgroundColor": "#FFFFFF"
+				}
+			}
+		},
+		"header": {
+			"components": {
+				"style": {
+					"backgroundColor": "#000",
+					"borderBottom": "1px solid rgb(197, 199, 200)"
+				},
+				"layout": {
+					"type": "original"
+				},
+				"logo": {
+					"hidden": false,
+					"components": {
+						"image": "https://media.koala.io/resize?source=https://koala-marketing-api-production.s3.amazonaws.com/pf-changs/assets/logo-pfchangs.png&width=300&quality=85&format=auto"
+					}
+				},
+				"login_signup": {
+					"hidden": false,
+					"components": {
+						"layout": {
+							"type": "pfchangs"
+						},
+						"icon": {
+							"hidden": false,
+							"components": {
+								"image": "https://koala-web-ordering-themes.s3.amazonaws.com/pfchangs/sandbox/images/account-icon.svg"
+							}
+						}
+					}
+				},
+				"cart": {
+					"hidden": false,
+					"components": {
+						"layout": {
+							"type": "pfchangs"
+						},
+						"open_strategy": {
+							"type": "popover",
+							"position": "right",
+							"alwaysShowed": true
+						},
+						"icon": {
+							"components": {
+								"image": "https://koala-web-ordering-themes.s3.amazonaws.com/pfchangs/production/images/bag.svg",
+								"layout": {
+									"type": "original"
+								},
+								"style": {
+									"backgroundColor": "#aa272f",
+									"textColor": "#fff"
+								}
+							}
+						},
+						"text": {
+							"hidden": false
+						},
+						"business": {
+							"logo": {
+								"hidden": false
+							},
+							"time": {
+								"hidden": false
+							}
+						},
+						"products": {
+							"image": {
+								"hidden": false
+							}
+						},
+						"comments": {
+							"hidden": false
+						}
+					}
+				},
+				"address_form": {
+					"hidden": true,
+					"components": {
+						"map": {
+							"hidden": false
+						},
+						"icons": {
+							"hidden": false
+						},
+						"zipcode": {
+							"hidden": false
+						},
+						"address_notes": {
+							"hidden": false
+						},
+						"internal_number": {
+							"hidden": false
+						}
+					}
+				},
+				"order_types": {
+					"hidden": true
+				}
+			}
+		},
+		"orders": {
+			"hidden": false,
+			"components": {
+				"business_logo": {
+					"hidden": false
+				},
+				"date": {
+					"hidden": false
+				},
+				"map": {
+					"hidden": false
+				}
+			}
+		},
+		"profile": {
+			"hidden": false,
+			"components": {
+				"layout": {
+					"type": "original",
+					"position": "column"
+				},
+				"address_list": {
+					"hidden": false,
+					"components": {
+						"layout": {
+							"type": "original",
+							"position": "normal"
+						},
+						"address": {
+							"hidden": false
+						},
+						"icons": {
+							"hidden": false
+						},
+						"zipcode": {
+							"hidden": false
+						},
+						"internal_number": {
+							"hidden": false
+						},
+						"address_notes": {
+							"hidden": false
+						}
+					}
+				},
+				"picture": {
+					"hidden": false
+				},
+				"name": {
+					"hidden": false
+				},
+				"last_name": {
+					"hidden": false
+				},
+				"second_name": {
+					"hidden": false
+				},
+				"second_last_name": {
+					"hidden": false
+				},
+				"email": {
+					"hidden": false
+				},
+				"cellphone": {
+					"hidden": false
+				},
+				"password": {
+					"hidden": false
+				},
+				"birthday": {
+					"hidden": false
+				},
+				"promotions": {
+					"hidden": false
+				},
+				"notification_settings": {
+					"hidden": false
+				},
+				"languages": {
+					"hidden": false
+				},
+				"orders": {
+					"hidden": false
+				}
+			}
+		},
+		"confirmation": {
+			"hidden": false,
+			"components": {
+				"layout": {
+					"type": "original"
+				},
+				"delivery_type": {
+					"hidden": false
+				},
+				"delivery_date": {
+					"hidden": false
+				},
+				"delivery_progress": {
+					"hidden": false
+				},
+				"business_information": {
+					"hidden": false,
+					"components": {
+						"phone": {
+							"hidden": false
+						},
+						"messages": {
+							"hidden": false
+						},
+						"email": {
+							"hidden": false
+						},
+						"address": {
+							"hidden": false
+						},
+						"map": {
+							"hidden": false
+						},
+						"logo": {
+							"hidden": false
+						}
+					}
+				},
+				"driver_information": {
+					"components": {
+						"name": {
+							"hidden": false
+						},
+						"phone": {
+							"hidden": false
+						},
+						"messages": {
+							"hidden": false
+						},
+						"email": {
+							"hidden": false
+						},
+						"photo": {
+							"hidden": false
+						}
+					}
+				},
+				"customer_information": {
+					"components": {
+						"phone": {
+							"hidden": false
+						},
+						"address": {
+							"hidden": false
+						},
+						"email": {
+							"hidden": false
+						},
+						"photo": {
+							"hidden": false
+						}
+					}
+				},
+				"cart": {
+					"components": {
+						"products": {
+							"components": {
+								"photo": {
+									"hidden": false
+								}
+							}
+						}
+					}
+				},
+				"delivery_types": {
+					"components": {
+						"hidden": false
+					}
+				}
+			}
+		},
+		"footer": {
+			"hidden": false,
+			"components": {
+				"style": {
+					"backgroundColor": "#fff"
+				}
+			}
+		},
+		"homepage_view": {
+			"components": {
+				"layout": {
+					"type": "original",
+					"position": "left"
+				},
+				"image": "https://koala-web-ordering-themes.s3.amazonaws.com/pfchangs/production/images/background.jpg"
+			}
+		}
+	}
+}

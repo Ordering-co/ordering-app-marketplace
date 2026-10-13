@@ -1,0 +1,82 @@
+import styled from 'styled-components/native'
+
+export const Container = styled.View`
+`
+export const UpsellingContainer = styled.ScrollView`
+  margin-top: 10px;
+`
+export const Item = styled.View`
+  border-width: 1px;
+  border-color: ${(props: any) => props.theme.colors.border};
+  border-radius: 7.6px;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px;
+  margin-right: 12px;
+  min-width: 207px;
+  max-width: 207px;
+  width: 207px;
+`
+export const Details = styled.View`
+  align-items: flex-start;
+  justify-content: center;
+`
+export const AddButton = styled.TouchableOpacity`
+	padding: 4px 8px;
+	background-color: ${(props: any) => props.theme.colors.primaryContrast};
+	border-radius: 30px;
+	width: 40%;
+	align-items: center;
+	margin-top: 6px;
+`
+export const CloseUpselling = styled.View`
+  margin-vertical: 10px;
+  width: 100%;
+`
+export const TopBar = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 50px;
+  padding-horizontal: 40px;
+`
+export const TopActions = styled.TouchableOpacity`
+	height: 44px;
+	justify-content: center;
+`;
+
+export const CartList = styled.ScrollView`
+  padding: 10px 40px;
+  overflow: visible;
+`
+
+export const CartDivider = styled.View`
+  height: 8px;
+  background-color:  ${(props: any) => props.theme.colors.backgroundGray100};
+  margin: 20px -40px 0;
+`
+
+
+export const TopActionsHeader = styled.TouchableOpacity`
+	height: 60px;
+	justify-content: center;
+  min-width: 30px;
+  padding-right: 15px;
+`;
+
+export const TopHeader = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  height: 60px;
+  min-height: 60px;
+`
+
+export const Divider = styled.View`
+  height: 4px;
+  background-color:  ${(props: any) => props.theme.colors.border};
+  margin-horizontal: 20px;
+`
