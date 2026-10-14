@@ -1,74 +1,52 @@
 # Ordering Marketplace App
 
-Customer mobile app: businesses, catalog, cart, checkout and order tracking.
+Copy this single prompt into your coding assistant from the cloned repository:
 
-A bare React Native project for Android and iOS. React Native 0.81.1, React 19.1.0 and TypeScript.
-
-## Requirements
-
-- Node.js 22 LTS (React Native requires Node >=20.19.4) and Yarn Classic 1.22.
-- Android: JDK 17, Android Studio, and the SDK and NDK versions specified in `android/build.gradle`.
-- iOS: macOS, Xcode compatible with React Native 0.81, Ruby as specified in `.ruby-version`, Bundler and CocoaPods as specified in `Gemfile.lock`. [React Native 0.81 requires Xcode 16.1 or later](https://reactnative.dev/blog/2025/08/12/react-native-0.81).
-- An Ordering project with API and sockets enabled to test real workflows.
-
-## Get the source
-
-```sh
-git clone --recurse-submodules https://github.com/Ordering-co/ordering-app-marketplace-v26.git
-cd ordering-app-marketplace-v26
-yarn install --frozen-lockfile
+```text
+Set up this Ordering Marketplace app using setup.md. Detect my project or ask for its slug. Configure it safely, install the pinned dependencies and open a simulator. Use the local preview when Firebase files are missing. Verify the displayed project and one visible edit with Fast Refresh.
 ```
 
-The SDK is a submodule from `https://github.com/Finitless-com/ordering-components.git`. If you cloned without submodules, run `git submodule update --init --recursive`. Keep the revision pinned by the repository's gitlink.
+Customers can browse businesses, use the catalog and checkout, track orders and manage their consumer account. React Native 0.81.1, React 19.1 and TypeScript; native Android/iOS source is included.
 
-## Configure your application
+## Start with your project
 
-Edit `src/config.json` and replace `YOUR_PROJECT` with your project. Review `api`, `socket`, language, app name and product settings. Public identifiers and product options are defined in the source. `src/theme.json` contains the theme and visual assets.
+1. Clone the public app with its pinned SDK:
 
-`builder.json`, `app.json`, Android/iOS projects and schemes must match your application identifiers. Set up your own bundle identifier, Apple team, provisioning profiles and signing in Xcode. Configure your own Android release signing; `android/app/debug.keystore` is the public debug template and must not be used to publish a production application.
+   ```sh
+   git clone --recurse-submodules https://github.com/Ordering-co/ordering-app-marketplace.git
+   cd ordering-app-marketplace
+   yarn install --frozen-lockfile
+   ```
 
-Add your own Firebase registrations at `android/app/google-services.json` and `ios/GoogleService-Info.plist`, and ensure the plist belongs to the `ReactNativeAppsTemplate5` target. These service files are required for native builds using Firebase. Replace native Maps placeholders and configure the integrations you enable with your own service settings. Keep private credentials, provisioning profiles and production keystores out of the repository.
+2. Inspect an existing connection, then configure your explicitly chosen project:
 
-Checkout, payments, analytics and tracking depend on your project configuration and enabled services. Configure your own Apple Pay, Facebook, Forter and Intercom identifiers when using those integrations.
+   ```sh
+   node scripts/onboarding/cli.mjs detect
+   node scripts/onboarding/cli.mjs configure --project YOUR_PROJECT_SLUG
+   node scripts/onboarding/cli.mjs doctor
+   ```
 
-## Run
+   Detection does not log you into the consumer app. If no connection is available, enter your own project slug manually; public validation confirms the destination, not ownership or authentication.
 
-```sh
-yarn start
-# In another terminal:
-yarn android
-```
+3. Follow [setup.md](setup.md) for your platform, an explicit iOS simulator preview without Firebase or your own native service registrations, native launch, the first visible edit and troubleshooting. A Metro process alone is not a running mobile app.
 
-For iOS, install Ruby dependencies and pods first:
+Use Node 22 LTS (minimum 20.19.4), Yarn Classic 1.22, JDK 17 for Android, or macOS/Xcode 16.1+ for iOS. The pinned Ruby, Bundler and CocoaPods requirements are in the runbook. Do not remove lockfiles to bypass an installation failure.
 
-```sh
-bundle install
-cd ios
-bundle exec pod install
-cd ..
-yarn ios
-```
-
-Running on a device requires your own permissions and services. Metro serves JavaScript; it does not by itself produce APK/IPA files or verify login, orders, payments, location or notifications.
-
-## Validate
+## Checks and source
 
 ```sh
+node --test scripts/onboarding/*.test.mjs
+yarn test:onboarding
 yarn lint:check
 yarn exec tsc --noEmit
-yarn test --runInBand
-yarn test:coverage --runInBand
+yarn test:coverage --runInBand --watchman=false
 yarn test:coverage:summary --no-run
 yarn i18n:verify
 yarn i18n:check-generated
 ```
 
-`yarn lint` applies changes; use `lint:check` for review. Coverage measures the paths listed in `jest/coverage-include.js`; CI requires a 70% average across statements, branches, functions and its line-count fallback. Mocks do not replace device testing against your backend.
-
-## Translations
-
-`i18n/translations.json` is the locale catalog. Run `yarn i18n:generate` to regenerate derived files and see `i18n/README.md`. English fallback values provide visible text where a translation is still missing; review translations before distributing your app in those languages.
+The SDK is the gitlink at `src/@/components`, fetched from `https://github.com/Finitless-com/ordering-components.git`. If needed, run `git submodule update --init --recursive`; keep the recorded revision. The app UI lives in `src/ui`; screen wiring lives in `src/pages` and `src/navigators`. Translation maintenance is in [i18n/README.md](i18n/README.md). Tests and JS bundling do not verify native providers, payments, or real orders. The latest local evidence is in [docs/onboarding-verification.md](docs/onboarding-verification.md).
 
 ## License
 
-This code is distributed under the terms in [license-ordering.txt](license-ordering.txt). Dependencies, the SDK and third-party assets retain their own licenses and notices.
+This code is distributed under [license-ordering.txt](license-ordering.txt). The SDK, dependencies and third-party assets retain their own licenses and notices.

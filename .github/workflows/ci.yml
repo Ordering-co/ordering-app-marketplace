@@ -18,6 +18,7 @@ jobs:
       - run: yarn install --frozen-lockfile
         env:
           HUSKY: '0'
+      - run: node --test scripts/onboarding/*.test.mjs
       - run: yarn i18n:verify
       - run: yarn i18n:check-generated
       - run: yarn lint:check

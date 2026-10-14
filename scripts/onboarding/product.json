@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "product": "customer-app",
+  "configFile": "src/config.json",
+  "projectPaths": [
+    {
+      "path": [
+        "project"
+      ],
+      "required": true
+    }
+  ],
+  "projectPlaceholders": [
+    "",
+    "YOUR_PROJECT",
+    "your-project",
+    "your-project-slug"
+  ],
+  "iosTarget": "ReactNativeAppsTemplate5"
+}
