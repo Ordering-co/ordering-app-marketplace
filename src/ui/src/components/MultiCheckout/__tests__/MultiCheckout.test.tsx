@@ -6,7 +6,14 @@ import { fireEvent } from '@testing-library/react-native'
 import { MultiCheckout } from '..'
 import { renderWithProviders } from '../../../../../../jest/helpers/renderWithProviders'
 
-const mockMulti: any = { openCarts: null, verticals: {}, orderCarts: null }
+const mockMulti: any = {
+  openCarts: null,
+  verticals: {},
+  orderCarts: null,
+  config: { configs: {} },
+  session: { user: { id: 1 }, loading: false },
+  paymentProps: null
+}
 
 jest.mock('../../MultiCart', () => {
   const { View } = require('react-native')
@@ -17,6 +24,12 @@ jest.mock('../../Checkout/CheckoutLoginForm', () => {
   const { View } = require('react-native')
   return { CheckoutLoginForm: () => <View testID="checkout-login-form-stub" /> }
 })
+jest.mock('../../MultiCartsPaymethodsAndWallets', () => ({
+  MultiCartsPaymethodsAndWallets: (props: any) => {
+    mockMulti.paymentProps = props
+    return null
+  }
+}))
 
 jest.mock('../../CheckoutStudentDetails', () => {
   const React = require('react')
@@ -52,10 +65,12 @@ jest.mock('@components', () => {
   const baseUseOrder = base.useOrder
   return {
     ...base,
-    useOrder: jest.fn(() => {
-      const [state, actions] = baseUseOrder()
-      return [mockMulti.orderCarts ? { ...state, carts: mockMulti.orderCarts } : state, actions]
-    })
+      useOrder: jest.fn(() => {
+        const [state, actions] = baseUseOrder()
+        return [mockMulti.orderCarts ? { ...state, carts: mockMulti.orderCarts } : state, actions]
+      }),
+      useConfig: jest.fn(() => [mockMulti.config]),
+      useSession: jest.fn(() => [mockMulti.session, { login: jest.fn() }])
   }
 })
 jest.mock('@ui', () => require('../../../../../../jest/helpers/m6OrdersUiMock').getUiMock())
@@ -76,6 +91,9 @@ describe('MultiCheckout', () => {
     mockMulti.openCarts = null
     mockMulti.verticals = {}
     mockMulti.orderCarts = null
+    mockMulti.config = { configs: {} }
+    mockMulti.session = { user: { id: 1 }, loading: false }
+    mockMulti.paymentProps = null
     d.multiCheckoutDefaults.handleGroupPlaceOrder.mockClear()
   })
 
@@ -106,6 +124,33 @@ describe('MultiCheckout', () => {
     expect(queryByTestId('student-details-food-cart')).toBeNull()
     fireEvent.press(getByTestId('floating-button'))
     expect(d.multiCheckoutDefaults.handleGroupPlaceOrder).toHaveBeenCalled()
+  })
+
+  it('blocks persisted guest checkout when guest permission is disabled', () => {
+    mockMulti.openCarts = [foodCart]
+    mockMulti.session = { user: { guest_id: 'guest-1' }, loading: false }
+    const { getByTestId } = renderMulti()
+    fireEvent.press(getByTestId('floating-button'))
+    expect(d.multiCheckoutDefaults.handleGroupPlaceOrder).not.toHaveBeenCalled()
+  })
+
+  it('rechecks a retained payment callback after permission is revoked', () => {
+    mockMulti.openCarts = [foodCart]
+    mockMulti.session = { user: { guest_id: 'guest-1' }, loading: false }
+    mockMulti.config = {
+      configs: {
+        guest_checkout_enabled: { value: '1' },
+        allowed_order_types_guest_checkout: { value: 'delivery' }
+      }
+    }
+    const { rerender } = renderMulti()
+    const retainedPlaceOrder = mockMulti.paymentProps.handlePlaceOrder
+    mockMulti.config = { configs: {} }
+    rerender(<MultiCheckout navigation={{ navigate: jest.fn() }} onNavigationRedirect={jest.fn()} />)
+
+    retainedPlaceOrder()
+
+    expect(d.multiCheckoutDefaults.handleGroupPlaceOrder).not.toHaveBeenCalled()
   })
 
   it('blocks place order and explains when a school cart has no student', () => {

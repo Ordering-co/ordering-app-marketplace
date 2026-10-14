@@ -1385,6 +1385,90 @@
     "bg": "Отказ",
     "tr": "İptal etmek"
   },
+  "CANCEL_PAYMENT_ATTEMPT": {
+    "en": "Cancel payment attempt",
+    "es": "Cancelar intento de pago",
+    "fr": "Annuler la tentative de paiement",
+    "it": "Annulla il tentativo di pagamento",
+    "de": "Zahlungsversuch abbrechen",
+    "pt": "Cancelar tentativa de pagamento",
+    "da": "Annuller betalingsforsøg",
+    "nl": "Betaalpoging annuleren",
+    "ar": "إلغاء محاولة الدفع",
+    "el": "Ακύρωση προσπάθειας πληρωμής",
+    "bg": "Отказ от опита за плащане",
+    "tr": "Ödeme denemesini iptal et"
+  },
+  "CANCEL_PAYMENT_ATTEMPT_CLOSE_TAB": {
+    "en": "If you left the _paymethod_ page open, close it: a payment made there after cancelling won't create your order.",
+    "es": "Si dejaste abierta la página de _paymethod_, ciérrala: un pago hecho ahí después de cancelar no generará tu pedido.",
+    "fr": "Si vous avez laissé la page _paymethod_ ouverte, fermez-la : un paiement effectué là après l'annulation ne créera pas votre commande.",
+    "it": "Se hai lasciato aperta la pagina di _paymethod_, chiudila: un pagamento effettuato lì dopo l'annullamento non creerà il tuo ordine.",
+    "de": "Wenn du die Seite von _paymethod_ offen gelassen hast, schließe sie: Eine dort nach dem Abbrechen getätigte Zahlung erstellt keine Bestellung.",
+    "pt": "Se você deixou a página do _paymethod_ aberta, feche-a: um pagamento feito lá depois de cancelar não vai gerar o seu pedido.",
+    "da": "Hvis du har ladet _paymethod_-siden stå åben, så luk den: En betaling foretaget der efter annulleringen opretter ikke din ordre.",
+    "nl": "Als je de pagina van _paymethod_ open hebt laten staan, sluit die dan: een betaling die daar na het annuleren wordt gedaan, maakt je bestelling niet aan.",
+    "ar": "إذا تركت صفحة _paymethod_ مفتوحة، أغلقها: أي دفعة تتم هناك بعد الإلغاء لن تُنشئ طلبك.",
+    "el": "Αν άφησες ανοιχτή τη σελίδα του _paymethod_, κλείσε την: μια πληρωμή που θα γίνει εκεί μετά την ακύρωση δεν θα δημιουργήσει την παραγγελία σου.",
+    "bg": "Ако си оставил страницата на _paymethod_ отворена, затвори я: плащане, направено там след отказа, няма да създаде поръчката ти.",
+    "tr": "_paymethod_ sayfasını açık bıraktıysan kapat: iptalden sonra orada yapılan bir ödeme siparişini oluşturmaz."
+  },
+  "CANCEL_PAYMENT_ATTEMPT_DESC": {
+    "en": "If you didn't pay, your cart will be released so you can pay again. If you already paid with _paymethod_, nothing is cancelled: we'll create your order.",
+    "es": "Si no pagaste, tu carrito quedará libre para pagar de nuevo. Si ya pagaste en _paymethod_, no se cancela: crearemos tu pedido.",
+    "fr": "Si vous n'avez pas payé, votre panier sera libéré pour que vous puissiez payer à nouveau. Si vous avez déjà payé avec _paymethod_, rien n'est annulé : nous créerons votre commande.",
+    "it": "Se non hai pagato, il carrello verrà sbloccato così potrai pagare di nuovo. Se hai già pagato con _paymethod_, non viene annullato nulla: creeremo il tuo ordine.",
+    "de": "Wenn du nicht bezahlt hast, wird dein Warenkorb freigegeben, damit du erneut bezahlen kannst. Wenn du bereits mit _paymethod_ bezahlt hast, wird nichts storniert: Wir erstellen deine Bestellung.",
+    "pt": "Se você não pagou, seu carrinho será liberado para pagar novamente. Se você já pagou com _paymethod_, nada é cancelado: criaremos o seu pedido.",
+    "da": "Hvis du ikke har betalt, frigives din kurv, så du kan betale igen. Hvis du allerede har betalt med _paymethod_, annulleres intet: Vi opretter din ordre.",
+    "nl": "Als je niet hebt betaald, wordt je winkelwagen vrijgegeven zodat je opnieuw kunt betalen. Als je al met _paymethod_ hebt betaald, wordt er niets geannuleerd: we maken je bestelling aan.",
+    "ar": "إذا لم تدفع، سيتم تحرير سلتك لتتمكن من الدفع مجددًا. إذا كنت قد دفعت بالفعل عبر _paymethod_، فلن يُلغى شيء: سننشئ طلبك.",
+    "el": "Αν δεν πλήρωσες, το καλάθι σου θα αποδεσμευτεί για να πληρώσεις ξανά. Αν έχεις ήδη πληρώσει με _paymethod_, δεν ακυρώνεται τίποτα: θα δημιουργήσουμε την παραγγελία σου.",
+    "bg": "Ако не си платил, количката ти ще бъде освободена, за да платиш отново. Ако вече си платил с _paymethod_, нищо не се отменя: ще създадем поръчката ти.",
+    "tr": "Ödeme yapmadıysan sepetin serbest bırakılır ve yeniden ödeyebilirsin. _paymethod_ ile zaten ödediysen hiçbir şey iptal edilmez: siparişini oluştururuz."
+  },
+  "CANCEL_PAYMENT_ATTEMPT_ERROR_DESC": {
+    "en": "Check your connection and try again. Your cart has not changed.",
+    "es": "Revisa tu conexión e inténtalo de nuevo. Tu carrito sigue igual.",
+    "fr": "Vérifiez votre connexion et réessayez. Votre panier n'a pas changé.",
+    "it": "Controlla la connessione e riprova. Il tuo carrello non è cambiato.",
+    "de": "Prüfe deine Verbindung und versuche es erneut. Dein Warenkorb ist unverändert.",
+    "pt": "Verifique sua conexão e tente novamente. Seu carrinho não mudou.",
+    "da": "Tjek din forbindelse, og prøv igen. Din kurv er uændret.",
+    "nl": "Controleer je verbinding en probeer het opnieuw. Je winkelwagen is niet gewijzigd.",
+    "ar": "تحقق من اتصالك وحاول مرة أخرى. سلتك لم تتغير.",
+    "el": "Έλεγξε τη σύνδεσή σου και δοκίμασε ξανά. Το καλάθι σου δεν άλλαξε.",
+    "bg": "Провери връзката си и опитай отново. Количката ти не е променена.",
+    "tr": "Bağlantını kontrol edip tekrar dene. Sepetin değişmedi."
+  },
+  "CANCEL_PAYMENT_ATTEMPT_ERROR_TITLE": {
+    "en": "We couldn't connect",
+    "es": "No pudimos conectar",
+    "fr": "Connexion impossible",
+    "it": "Impossibile connettersi",
+    "de": "Verbindung fehlgeschlagen",
+    "pt": "Não foi possível conectar",
+    "da": "Vi kunne ikke oprette forbindelse",
+    "nl": "We konden geen verbinding maken",
+    "ar": "تعذّر الاتصال",
+    "el": "Δεν ήταν δυνατή η σύνδεση",
+    "bg": "Не успяхме да се свържем",
+    "tr": "Bağlantı kurulamadı"
+  },
+  "CANCEL_PAYMENT_ATTEMPT_QUESTION": {
+    "en": "Cancel the payment attempt?",
+    "es": "¿Cancelar el intento de pago?",
+    "fr": "Annuler la tentative de paiement ?",
+    "it": "Annullare il tentativo di pagamento?",
+    "de": "Zahlungsversuch abbrechen?",
+    "pt": "Cancelar a tentativa de pagamento?",
+    "da": "Annuller betalingsforsøget?",
+    "nl": "Betaalpoging annuleren?",
+    "ar": "إلغاء محاولة الدفع؟",
+    "el": "Ακύρωση της προσπάθειας πληρωμής;",
+    "bg": "Отказ от опита за плащане?",
+    "tr": "Ödeme denemesi iptal edilsin mi?"
+  },
   "CANCELLED_BY_CUSTOMER": {
     "en": "Cancelled by customer",
     "es": "Cancelado por el cliente",
@@ -1553,6 +1637,34 @@
     "bg": "Количката не е намерена",
     "tr": "Sepet bulunamadı"
   },
+  "CART_PENDING_PAYMENT_DESC": {
+    "en": "If you didn't complete the payment, cancel the attempt to pay again.",
+    "es": "Si no completaste el pago, cancela el intento para volver a pagar.",
+    "fr": "Si vous n'avez pas finalisé le paiement, annulez la tentative pour payer à nouveau.",
+    "it": "Se non hai completato il pagamento, annulla il tentativo per pagare di nuovo.",
+    "de": "Wenn du die Zahlung nicht abgeschlossen hast, brich den Versuch ab, um erneut zu bezahlen.",
+    "pt": "Se você não concluiu o pagamento, cancele a tentativa para pagar novamente.",
+    "da": "Hvis du ikke gennemførte betalingen, så annuller forsøget for at betale igen.",
+    "nl": "Als je de betaling niet hebt afgerond, annuleer dan de poging om opnieuw te betalen.",
+    "ar": "إذا لم تُكمل الدفع، ألغِ المحاولة لتدفع من جديد.",
+    "el": "Αν δεν ολοκλήρωσες την πληρωμή, ακύρωσε την προσπάθεια για να πληρώσεις ξανά.",
+    "bg": "Ако не си завършил плащането, откажи опита, за да платиш отново.",
+    "tr": "Ödemeyi tamamlamadıysan yeniden ödemek için denemeyi iptal et."
+  },
+  "CART_PENDING_PAYMENT_TITLE": {
+    "en": "Your payment with _paymethod_ is still pending",
+    "es": "Tu pago con _paymethod_ sigue pendiente",
+    "fr": "Votre paiement avec _paymethod_ est toujours en attente",
+    "it": "Il tuo pagamento con _paymethod_ è ancora in sospeso",
+    "de": "Deine Zahlung mit _paymethod_ ist noch ausstehend",
+    "pt": "Seu pagamento com _paymethod_ ainda está pendente",
+    "da": "Din betaling med _paymethod_ afventer stadig",
+    "nl": "Je betaling met _paymethod_ is nog in behandeling",
+    "ar": "دفعتك عبر _paymethod_ ما زالت معلّقة",
+    "el": "Η πληρωμή σου με _paymethod_ εκκρεμεί ακόμη",
+    "bg": "Плащането ти с _paymethod_ все още е в изчакване",
+    "tr": "_paymethod_ ile ödemen hâlâ beklemede"
+  },
   "CART_STATUS_CANCEL_MESSAGE": {
     "en": "The payment has not been successful, please try again",
     "es": "El pago no ha sido exitoso, por favor intenta nuevamente",
@@ -1580,6 +1692,34 @@
     "el": "Η παραγγελία σας βρίσκεται υπό επεξεργασία, περιμένετε λίγο ακόμα. αν περιμένετε πολύ, φορτώστε ξανά την εφαρμογή",
     "bg": "Вашата поръчка се обработва, моля изчакайте още малко. ако сте чакали твърде дълго, моля, презаредете приложението",
     "tr": "Siparişiniz işleniyor, lütfen biraz daha bekleyin. Çok uzun süre beklediyseniz lütfen uygulamayı yeniden yükleyin"
+  },
+  "CART_STILL_PENDING_DESC": {
+    "en": "_paymethod_ has a payment in process (for example, a cash payment) or did not respond. Try again in a few minutes.",
+    "es": "_paymethod_ tiene un pago en proceso (por ejemplo, en efectivo) o no respondió. Inténtalo de nuevo en unos minutos.",
+    "fr": "_paymethod_ a un paiement en cours (par exemple, en espèces) ou n'a pas répondu. Réessayez dans quelques minutes.",
+    "it": "_paymethod_ ha un pagamento in corso (ad esempio, in contanti) o non ha risposto. Riprova tra qualche minuto.",
+    "de": "_paymethod_ hat eine Zahlung in Bearbeitung (zum Beispiel eine Barzahlung) oder hat nicht geantwortet. Versuche es in ein paar Minuten erneut.",
+    "pt": "_paymethod_ tem um pagamento em processamento (por exemplo, em dinheiro) ou não respondeu. Tente novamente em alguns minutos.",
+    "da": "_paymethod_ har en betaling under behandling (for eksempel en kontantbetaling) eller svarede ikke. Prøv igen om et par minutter.",
+    "nl": "_paymethod_ heeft een betaling in behandeling (bijvoorbeeld een contante betaling) of reageerde niet. Probeer het over een paar minuten opnieuw.",
+    "ar": "لدى _paymethod_ دفعة قيد المعالجة (مثل الدفع نقدًا) أو لم يستجب. حاول مرة أخرى بعد بضع دقائق.",
+    "el": "Το _paymethod_ έχει μια πληρωμή σε εξέλιξη (για παράδειγμα, με μετρητά) ή δεν ανταποκρίθηκε. Δοκίμασε ξανά σε λίγα λεπτά.",
+    "bg": "_paymethod_ има плащане в процес на обработка (например в брой) или не отговори. Опитай отново след няколко минути.",
+    "tr": "_paymethod_ üzerinde işlemde olan bir ödeme var (örneğin nakit ödeme) veya yanıt vermedi. Birkaç dakika sonra tekrar dene."
+  },
+  "CART_STILL_PENDING_TITLE": {
+    "en": "It can't be cancelled yet",
+    "es": "Todavía no se puede cancelar",
+    "fr": "Annulation impossible pour le moment",
+    "it": "Non è ancora possibile annullare",
+    "de": "Abbrechen ist noch nicht möglich",
+    "pt": "Ainda não é possível cancelar",
+    "da": "Det kan ikke annulleres endnu",
+    "nl": "Annuleren kan nog niet",
+    "ar": "لا يمكن الإلغاء بعد",
+    "el": "Δεν μπορεί να ακυρωθεί ακόμη",
+    "bg": "Все още не може да се откаже",
+    "tr": "Henüz iptal edilemiyor"
   },
   "CARTS": {
     "en": "Carts",
@@ -6887,6 +7027,20 @@
     "bg": "К",
     "tr": "k"
   },
+  "KEEP_WAITING": {
+    "en": "Keep waiting",
+    "es": "Seguir esperando",
+    "fr": "Continuer d'attendre",
+    "it": "Continua ad attendere",
+    "de": "Weiter warten",
+    "pt": "Continuar esperando",
+    "da": "Bliv ved med at vente",
+    "nl": "Blijven wachten",
+    "ar": "متابعة الانتظار",
+    "el": "Συνέχιση αναμονής",
+    "bg": "Продължи да чакаш",
+    "tr": "Beklemeye devam et"
+  },
   "KM": {
     "en": "Km",
     "es": "kilómetros",
@@ -10219,6 +10373,48 @@
     "bg": "Плащайте с портфейл за кредитни точки",
     "tr": "Kredi Puanı Cüzdanı ile Ödeme"
   },
+  "PAYMENT_ATTEMPT_CANCELLED": {
+    "en": "The payment attempt was cancelled. Choose a payment method to try again.",
+    "es": "El intento de pago se canceló. Elige un método de pago para intentar de nuevo.",
+    "fr": "La tentative de paiement a été annulée. Choisissez un moyen de paiement pour réessayer.",
+    "it": "Il tentativo di pagamento è stato annullato. Scegli un metodo di pagamento per riprovare.",
+    "de": "Der Zahlungsversuch wurde abgebrochen. Wähle eine Zahlungsmethode, um es erneut zu versuchen.",
+    "pt": "A tentativa de pagamento foi cancelada. Escolha uma forma de pagamento para tentar novamente.",
+    "da": "Betalingsforsøget blev annulleret. Vælg en betalingsmetode for at prøve igen.",
+    "nl": "De betaalpoging is geannuleerd. Kies een betaalmethode om het opnieuw te proberen.",
+    "ar": "تم إلغاء محاولة الدفع. اختر طريقة دفع للمحاولة مرة أخرى.",
+    "el": "Η προσπάθεια πληρωμής ακυρώθηκε. Επίλεξε τρόπο πληρωμής για να δοκιμάσεις ξανά.",
+    "bg": "Опитът за плащане беше отказан. Избери начин на плащане, за да опиташ отново.",
+    "tr": "Ödeme denemesi iptal edildi. Tekrar denemek için bir ödeme yöntemi seç."
+  },
+  "PAYMENT_FOUND_ORDER_CREATED": {
+    "en": "We found your payment with _paymethod_ and created your order.",
+    "es": "Encontramos tu pago en _paymethod_ y creamos tu pedido.",
+    "fr": "Nous avons trouvé votre paiement avec _paymethod_ et créé votre commande.",
+    "it": "Abbiamo trovato il tuo pagamento con _paymethod_ e creato il tuo ordine.",
+    "de": "Wir haben deine Zahlung mit _paymethod_ gefunden und deine Bestellung erstellt.",
+    "pt": "Encontramos seu pagamento com _paymethod_ e criamos o seu pedido.",
+    "da": "Vi fandt din betaling med _paymethod_ og oprettede din ordre.",
+    "nl": "We hebben je betaling met _paymethod_ gevonden en je bestelling aangemaakt.",
+    "ar": "وجدنا دفعتك عبر _paymethod_ وأنشأنا طلبك.",
+    "el": "Βρήκαμε την πληρωμή σου με _paymethod_ και δημιουργήσαμε την παραγγελία σου.",
+    "bg": "Намерихме плащането ти с _paymethod_ и създадохме поръчката ти.",
+    "tr": "_paymethod_ ile ödemeni bulduk ve siparişini oluşturduk."
+  },
+  "PAYMENT_GATEWAY": {
+    "en": "the payment gateway",
+    "es": "la pasarela de pago",
+    "fr": "la passerelle de paiement",
+    "it": "il gateway di pagamento",
+    "de": "dem Zahlungsanbieter",
+    "pt": "o gateway de pagamento",
+    "da": "betalingsudbyderen",
+    "nl": "de betaalprovider",
+    "ar": "بوابة الدفع",
+    "el": "την πύλη πληρωμών",
+    "bg": "платежния портал",
+    "tr": "ödeme sağlayıcısı"
+  },
   "PAYMENT_METHOD": {
     "en": "Payment Method",
     "es": "Método de pago",
@@ -12906,6 +13102,20 @@
     "el": "Αποτελέσματα",
     "bg": "Резултати",
     "tr": "Sonuçlar"
+  },
+  "RETRY": {
+    "en": "Retry",
+    "es": "Reintentar",
+    "fr": "Réessayer",
+    "it": "Riprova",
+    "de": "Erneut versuchen",
+    "pt": "Tentar novamente",
+    "da": "Prøv igen",
+    "nl": "Opnieuw proberen",
+    "ar": "إعادة المحاولة",
+    "el": "Επανάληψη",
+    "bg": "Опитай отново",
+    "tr": "Tekrar dene"
   },
   "REVIEW": {
     "en": "Review",
@@ -16883,6 +17093,20 @@
     "bg": "Потвърдете телефона",
     "tr": "Telefonu Doğrulayın"
   },
+  "VERIFYING_WITH_PAYMETHOD": {
+    "en": "Verifying with _paymethod_…",
+    "es": "Verificando con _paymethod_…",
+    "fr": "Vérification auprès de _paymethod_…",
+    "it": "Verifica con _paymethod_…",
+    "de": "Überprüfung bei _paymethod_…",
+    "pt": "Verificando com _paymethod_…",
+    "da": "Bekræfter med _paymethod_…",
+    "nl": "Controleren bij _paymethod_…",
+    "ar": "جارٍ التحقق مع _paymethod_…",
+    "el": "Επαλήθευση με _paymethod_…",
+    "bg": "Проверка с _paymethod_…",
+    "tr": "_paymethod_ ile doğrulanıyor…"
+  },
   "VIA": {
     "en": "Via",
     "es": "Vía",
@@ -17862,6 +18086,20 @@
     "el": "Γράψτε μήνυμα",
     "bg": "Напишете съобщение",
     "tr": "Mesaj yaz"
+  },
+  "YES_CANCEL": {
+    "en": "Yes, cancel",
+    "es": "Sí, cancelar",
+    "fr": "Oui, annuler",
+    "it": "Sì, annulla",
+    "de": "Ja, abbrechen",
+    "pt": "Sim, cancelar",
+    "da": "Ja, annuller",
+    "nl": "Ja, annuleren",
+    "ar": "نعم، إلغاء",
+    "el": "Ναι, ακύρωση",
+    "bg": "Да, откажи",
+    "tr": "Evet, iptal et"
   },
   "YOU_ARE_FAR_FROM_ADDRESS": {
     "en": "You are far from this address",

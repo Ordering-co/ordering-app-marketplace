@@ -18,7 +18,7 @@ Local evidence recorded on 2026-10-14 from the public product worktree at base `
 | Yarn install | Passed with Yarn Classic 1.22.22 / Node 22.23.1 and `--frozen-lockfile` | Existing patches applied; lock unchanged |
 | Shared CLI and real native manifest tests | 35 passed: 30 common contract + 2 product preservation + 3 local adapter argument tests | `node --test scripts/onboarding/*.test.mjs` |
 | Native bootstrap and setup screen tests | 28 passed in 4 suites | `yarn test:onboarding`; provider mount, retry, exact destination, explicit enabled franchise, stale setup cancellation, known-key isolation and unrelated preference preservation |
-| Entire existing app suite plus onboarding | 993 passed in 268 suites | `yarn test:coverage --runInBand --watchman=false` |
+| Entire existing app suite plus onboarding | 1061 passed in 276 suites | `yarn test:coverage --runInBand --watchman=false` |
 | Coverage gate | Passed; scoped average 71.12% against 70% | `yarn test:coverage:summary --no-run`; scope remains `jest/coverage-include.js` |
 | Lint | Pass: 0 errors; 1,922 existing warnings. | `yarn lint:check` |
 | TypeScript | Fails with 346 diagnostics, equal to the original base | `yarn exec tsc --noEmit`; a read-only compiler host using HEAD versions of changed files reproduced exactly 346; 0 diagnostics in new files |
@@ -49,7 +49,7 @@ The initial normal native build commands used the available `iPhone 17` simulato
 
 Public configure/doctor/DEV-bootstrap/restore was also exercised in a temporary copy: exact project `orderingv1`, stale dummy token retired, unrelated preference retained, restore byte-identical and source JSON unchanged.
 
-Full command logs are retained locally in the ignored `.ordering-setup/verification/` directory. They are not committed or uploaded. To reproduce, follow `setup.md`, use the explicit local preview or supply your own native registrations, run the checks above, then open the app and verify the visible edit and normal consumer login on the actual device. The existing Marketplace full CI type check still fails on the recorded base diagnostics; the scoped Franchise onboarding workflow checks the shared contract and runtime gate.
+Full command logs are retained locally in the ignored `.ordering-setup/verification/` directory. They are not committed or uploaded. To reproduce, follow `setup.md`, use the explicit local preview or supply your own native registrations, run the checks above, then open the app and verify the visible edit and normal consumer login on the actual device. The existing Marketplace full CI type check still fails on the recorded upstream main diagnostics; the scoped Franchise onboarding workflow checks the shared contract and runtime gate.
 
 ## Visible edit evidence
 
@@ -62,3 +62,9 @@ Consumer login, guest account creation, authenticated orders, messages, payments
 ## Coordinated simulator proof
 
 The principal observed the real app and its selected `orderingv1` project on the dedicated iOS Simulator, then changed only the local banner text. [Before](onboarding-evidence/before.png) and [after](onboarding-evidence/after.png) show the visible change through Fast Refresh without a manual reload for that text change. The source was restored exactly before commit. Franchise selection was explicitly `burger_palace`, validated to numeric ID1; no guest/checkout action was used. Firebase, push, maps, tracking and automatic location remain disabled in this explicit local preview. Ordinary consumer authentication and production integrations are not measured.
+
+## Upstream integration revalidation
+
+During anonymous-clone QA, upstream Customer main advanced to `9ff9d2d45d1e9a1c67c75d705efe429defc74140`, including SDK gitlink `e1222c32a8eaeb6999ab1df52cb10dfa844d7888` and checkout changes. The integration preserved both upstream code and onboarding changes. With the updated SDK, frozen Yarn install, all 35 Node onboarding/manifest/adapter tests, the full 1,061-test suite in 276 suites, lint (0 errors) and both translation checks passed. TypeScript still reports 346 diagnostics; a read-only compiler host using upstream main source versions reproduced exactly the same 346, so onboarding added no diagnostics.
+
+The earlier anonymous Customer clone at `3ca849c5a41bef5a713ad6ce9a730410fe75313a` built and launched from new DerivedData, but that evidence is explicitly for the earlier source SHA and does not verify this integration's final native binary. The clean clone will be updated to the integrated commit and revalidated; no previous app binary is substituted for a source build.

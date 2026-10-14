@@ -205,6 +205,10 @@ const BusinessProductsListingOriginal = (props: BusinessProductsListingParams) =
     .filter((cart: any) => cart?.valid && cart?.status !== 2 && cart?.products?.length).length > 1
 
   const handleViewOrder = () => {
+    if (currentCart?.status === 2) {
+      handleUpsellingPage(currentCart)
+      return
+    }
     if (openMultiCart) {
       props.onNavigationRedirect('Cart')
       return
@@ -302,29 +306,21 @@ const BusinessProductsListingOriginal = (props: BusinessProductsListingParams) =
   const handleUpsellingPage = (cart: any) => {
     setOpenUpselling(false)
     setCanOpenUpselling(false)
-    const isProductCartParam = !!cart?.products?.length
-    const cartsAvailable: any = Object.values(orderState?.carts)
-      ?.filter((_cart: any) => _cart?.valid && _cart?.products?.length)
-      ?.filter((_c: any) => !isProductCartParam ? _c.uuid !== cart?.uuid : _c)
-    const group = cartGroups[`pending:${cart?.group?.uuid || cart?.uuid}`]
-    const isSingleCart = cartsAvailable.length === 1
-    const hasNotGroup = !cart?.group?.uuid
     const cartGroupUuid = cart?.group?.uuid
-    if (isSingleCart || !group) {
+    // A pending cart goes to the checkout where its payment is resolved: its own one,
+    // unless it was placed together with other carts
+    const isPendingMultiCart = !!cartGroupUuid && cartGroups[`pending:${cartGroupUuid}`]?.length > 1
+    if (isPendingMultiCart) {
+      props.onNavigationRedirect('MultiCheckout', {
+        cartUuid: cartGroupUuid
+      })
+    } else {
       props.onNavigationRedirect('CheckoutPage', {
         cartUuid: cart?.uuid,
         businessLogo: cart?.business?.logo,
         businessName: cart?.business?.name,
         cartTotal: cart?.total,
         fromProductsList: true
-      })
-    } else if (hasNotGroup) {
-      props.onNavigationRedirect('MultiCheckout', {
-        checkCarts: true
-      })
-    } else {
-      props.onNavigationRedirect('MultiCheckout', {
-        cartUuid: cartGroupUuid
       })
     }
   }

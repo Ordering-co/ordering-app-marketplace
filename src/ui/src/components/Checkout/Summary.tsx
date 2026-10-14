@@ -19,6 +19,8 @@ const SummaryUI = (props: any) => {
 
   const cart = carts?.[`businessId:${businessId}`] ?? {};
   const cartProducts = cart?.products;
+  // The API rejects any change to a cart with a payment in progress
+  const isCartPending = cart?.status === 2;
 
   if (!showComponent) return null;
 
@@ -31,10 +33,10 @@ const SummaryUI = (props: any) => {
         optimizeImage={optimizeImage}
         title={`${t('ARTICLES', 'Articles')} (${cartProducts?.length || 0})`}
         addLabel={t('ADD_MORE_PRODUCTS', 'Add more products')}
-        onAddProducts={cart?.business?.slug && navigation
+        onAddProducts={!isCartPending && cart?.business?.slug && navigation
           ? () => navigation.navigate('Business', { store: cart.business.slug })
           : undefined}
-        onEditCart={navigation
+        onEditCart={!isCartPending && navigation
           ? () => navigation.push('Cart', {
             businessSlug: cart?.business?.slug || cart?.business_id,
             fromCheckout: true,
@@ -93,8 +95,9 @@ const SummaryUI = (props: any) => {
         <>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             {HeaderTitle}
-            {navigation && (
+            {navigation && !isCartPending && (
               <TouchableOpacity
+                testID='checkout-edit-cart'
                 onPress={() => navigation.navigate('UpsellingPage', { businessId: cart?.business_id })}
               >
                 <MaterialCommunityIcon

@@ -35,7 +35,8 @@ const stripeDirectMethods = ['stripe_direct']
 const webViewPaymentGateway: any = ['paypal', 'square']
 const multiCheckoutMethods = ['global_google_pay', 'global_apple_pay']
 const cardsPaymethods = ['credomatic']
-const guestNotSupportedMethods = ['stripe', 'stripe_connect', 'stripe_redirect']
+const stripeCardsMethods = ['stripe', 'stripe_connect_v2']
+const guestNotSupportedMethods = ['stripe', 'stripe_connect', 'stripe_connect_v2', 'stripe_redirect']
 const popupMethods = [...guestNotSupportedMethods, 'stripe_direct', 'paypal']
 
 const getPaymethodCustomImageUri = (paymethod: any): string | null => {
@@ -126,6 +127,9 @@ const PaymentOptionsUI = (props: any) => {
 
   const [addCardOpen, setAddCardOpen] = useState({ stripe: false, stripeConnect: false, card: false });
   const paymethodSelected = props.paySelected || props.paymethodSelected || isOpenMethod?.paymethod
+  // The cards list shows for the method being picked, or for the one the cart already has when none is open
+  const cardsPaymethod = isOpenMethod?.paymethod ?? paymethodSelected?.paymethod ?? paymethodSelected
+  const stripeCardsPaymethod = stripeCardsMethods.includes(cardsPaymethod?.gateway) ? cardsPaymethod : null
 
   const paymethodsFieldRequired = ['paypal', 'apple_pay', 'global_apple_pay']
 
@@ -144,7 +148,7 @@ const PaymentOptionsUI = (props: any) => {
         })
         return
       }
-      const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
+      const isPopupMethod = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_connect_v2', 'stripe_redirect', 'paypal'].includes(paymethod?.gateway)
       if (webViewPaymentGateway.includes(paymethod?.gateway)) {
         handlePaymentMethodClickCustom(paymethod)
       }
@@ -210,7 +214,7 @@ const PaymentOptionsUI = (props: any) => {
         ? 'cash-multiple'
         : item?.gateway === 'card_delivery'
           ? 'credit-card-wireless'
-          : item?.gateway === 'stripe' || item?.gateway === 'stripe_connect' || item?.gateway === 'stripe_direct'
+          : item?.gateway === 'stripe' || item?.gateway === 'stripe_connect' || item?.gateway === 'stripe_connect_v2' || item?.gateway === 'stripe_direct'
             ? 'credit-card-outline'
             : 'credit-card-check-outline'
       return (
@@ -363,14 +367,16 @@ const PaymentOptionsUI = (props: any) => {
         />
       )}
 
-      {/* Stripe */}
-      {isOpenMethod?.paymethod?.gateway === 'stripe' && (
+      {/* Stripe, Stripe Connect v2 */}
+      {stripeCardsPaymethod && (
         <View>
           <StripeCardsList
+            key={stripeCardsPaymethod.gateway}
+            gateway={stripeCardsPaymethod.gateway}
             toSave
-            paymethod={isOpenMethod?.paymethod}
+            paymethod={stripeCardsPaymethod}
             businessId={props.businessId}
-            publicKey={props.publicKey || isOpenMethod?.paymethod?.credentials?.publishable}
+            publicKey={props.publicKey || stripeCardsPaymethod.credentials?.publishable}
             payType={paymethodsList?.name}
             onSelectCard={handlePaymethodDataChange}
             onNavigationRedirect={onNavigationRedirect}
@@ -392,8 +398,8 @@ const PaymentOptionsUI = (props: any) => {
             setCardsList={setCardList}
             requirements={props.clientSecret}
             publicKeyAddCard={
-              isOpenMethod?.paymethod?.credentials?.stripe?.publishable ||
-              isOpenMethod?.paymethod?.credentials?.publishable
+              stripeCardsPaymethod.credentials?.stripe?.publishable ||
+              stripeCardsPaymethod.credentials?.publishable
             }
           />
         </View>

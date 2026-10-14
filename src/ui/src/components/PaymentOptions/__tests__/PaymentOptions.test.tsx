@@ -31,6 +31,43 @@ describe('PaymentOptions', () => {
     expect(getByText('Cash')).toBeTruthy()
   })
 
+  it('does not render the saved cards list for cash', () => {
+    const { queryByTestId } = renderWithProviders(
+      <PaymentOptions isOpenMethod={{ paymethod: { id: 1, gateway: 'cash', name: 'Cash' } }} />
+    )
+    expect(queryByTestId('stripe-cards-list-stub')).toBeNull()
+  })
+
+  it.each(['stripe', 'stripe_connect_v2'])('renders the saved cards list for %s', (gateway) => {
+    const paymethod = { id: 85, gateway, name: 'Card', credentials: { publishable: 'pk_test' } }
+    const { getByTestId } = renderWithProviders(
+      <PaymentOptions isOpenMethod={{ paymethod }} paySelected={paymethod} />
+    )
+    expect(getByTestId('stripe-cards-list-stub')).toBeTruthy()
+  })
+
+  it.each(['stripe', 'stripe_connect_v2'])('keeps the saved cards list open for a cart that already has %s', (gateway) => {
+    const paymethod = { id: 85, gateway, name: 'Card', credentials: { publishable: 'pk_test' } }
+    const { getByTestId } = renderWithProviders(
+      <PaymentOptions
+        isOpenMethod={{ paymethod: null }}
+        paySelected={{ id: 85, paymethodId: 85, gateway, paymethod, data: { id: 'card_1' } }}
+      />
+    )
+    expect(getByTestId('stripe-cards-list-stub')).toBeTruthy()
+  })
+
+  it('closes the saved cards list when another method is being picked', () => {
+    const paymethod = { id: 85, gateway: 'stripe', name: 'Card', credentials: { publishable: 'pk_test' } }
+    const { queryByTestId } = renderWithProviders(
+      <PaymentOptions
+        isOpenMethod={{ paymethod: { id: 2, gateway: 'stripe_direct', name: 'Stripe Direct' } }}
+        paySelected={{ id: 85, paymethodId: 85, gateway: 'stripe', paymethod, data: { id: 'card_1' } }}
+      />
+    )
+    expect(queryByTestId('stripe-cards-list-stub')).toBeNull()
+  })
+
   it('labels card on delivery as Mobile Money in the maweja layout', () => {
     const { getByText, queryByText } = renderWithProviders(
       <PaymentOptions

@@ -1,14 +1,20 @@
 # Ordering Marketplace App
 
-Copy this single prompt into your coding assistant from the cloned repository:
+Copy this single prompt into your coding assistant:
 
 ```text
-Set up this Ordering Marketplace app using setup.md. Detect my project or ask for its slug. Configure it safely, install the pinned dependencies and open a simulator. Use the local preview when Firebase files are missing. Verify the displayed project and one visible edit with Fast Refresh.
+Get https://github.com/Ordering-co/ordering-app-marketplace.git, preserving any existing checkout. Read setup.md and set up my project. Detect its connection or ask for its slug. Install the pinned dependencies and open the app; use the explicit local preview if Firebase files are missing. Verify the displayed project and one visible edit with Fast Refresh.
 ```
 
 Customers can browse businesses, use the catalog and checkout, track orders and manage their consumer account. React Native 0.81.1, React 19.1 and TypeScript; native Android/iOS source is included.
 
-## Start with your project
+## Your three steps
+
+1. Paste the prompt above into your assistant. It obtains the source and follows `setup.md`.
+2. Confirm your detected Ordering project, or provide its exact project code. Sign in to the developer connection only if needed; that connection is separate from normal consumer login in the app.
+3. Check the displayed project in the local preview, then verify one visible edit updates live with Fast Refresh.
+
+## Manual alternative
 
 1. Clone the public app with its pinned SDK:
 
