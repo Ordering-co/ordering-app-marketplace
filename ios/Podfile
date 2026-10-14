@@ -15,6 +15,8 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 platform :ios, min_ios_version_supported
+# Select the source project even when the ignored simulator copy exists.
+project 'ReactNativeAppsTemplate5.xcodeproj'
 prepare_react_native_project!
 
 setup_permissions(['AppTrackingTransparency', 'Notifications'])
