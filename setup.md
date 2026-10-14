@@ -186,7 +186,7 @@ To update source, review upstream changes in your fork/branch, update the pinned
 | CocoaPods fails | Selected Ruby/Bundler and `bundle exec pod --version`; preserve the lock and report the first underlying error |
 | Missing Firebase plist/JSON or default app | Own service registrations, native target membership/path; project configuration cannot replace these |
 | App installed but blank, map/login/push unavailable | Capture native launch logs, JS logs and optional integration settings separately |
-| Text edit does not appear | Correct Metro checkout/port, development build, Fast Refresh, then reload; native edits need rebuilding |
+| Text edit does not appear | Verify this checkout's Metro root/port and Fast Refresh. After an SDK/source update, restart only your verified Metro with `--reset-cache` on its existing port, reload once to establish a baseline, then make a new edit and observe it without another reload. Never reset global Watchman or stop another checkout's server; native edits need rebuilding |
 
 Give your assistant this diagnosis prompt:
 

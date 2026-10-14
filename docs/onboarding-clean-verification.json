@@ -1,0 +1,83 @@
+{
+  "product": "customer",
+  "source_commit": "cc2ecb383dde1d692e788c37ab0aadd1171b5ca0",
+  "source": "anonymous public clone with pinned submodules",
+  "node": "22.23.1",
+  "yarn": "1.22.22",
+  "ruby": "3.3.10",
+  "bundler": "2.7.1",
+  "cocoapods": "1.16.2",
+  "install": {
+    "frozen_yarn": true,
+    "frozen_bundle": true,
+    "deployment_pods": true
+  },
+  "project": "orderingv1",
+  "franchise_id": null,
+  "doctor": {
+    "project": "orderingv1",
+    "verification": {
+      "project": true,
+      "authenticated": false
+    }
+  },
+  "personalization": {
+    "repeat": {
+      "changed": false,
+      "project": "orderingv1",
+      "verification": {
+        "project": true,
+        "authenticated": false
+      }
+    },
+    "app_name_preserved": true,
+    "custom_field_preserved": true,
+    "all_other_fields_preserved": true
+  },
+  "old_app_binaries_copied": false,
+  "native_build": "passed",
+  "install_launch": "passed",
+  "actual_ui": "principal observed native Home, Shop easily quickly securely and Local simulator orderingv1; no login interaction",
+  "consumer_authenticated": false,
+  "backend_writes_performed": false,
+  "limitations": [
+    "Android not executed: Java/SDK absent",
+    "No consumer login or guest account creation",
+    "Normal native Firebase/provider behavior not tested"
+  ],
+  "previous_native_source_commit": "3ca849c5a41bef5a713ad6ce9a730410fe75313a",
+  "sdk_commit": "e1222c32a8eaeb6999ab1df52cb10dfa844d7888",
+  "node_tests": 35,
+  "onboarding_tests": 28,
+  "native_adapter_repeat": {
+    "verified_metro_reuse": true,
+    "same_pid": 66730,
+    "same_port": 54973
+  },
+  "fast_refresh": {
+    "verified": true,
+    "observed_text": "My clean Customer edit \u00b7 orderingv1",
+    "project": "orderingv1",
+    "manual_reload_after_edit": false,
+    "source_restored_exactly": true,
+    "previous_attempts": "Two edits not reflected; not counted. Restarting verified own Metro with reset-cache and a separate baseline reload restored updates after SDK fast-forward.",
+    "baseline_reload_counted_as_refresh": false,
+    "before_evidence": "docs/images/customer-clean-before.png",
+    "after_evidence": "docs/images/customer-clean-after.png",
+    "source_commit": "745944207b7b72bc1153304d1ed9878053ff8b51"
+  },
+  "final_repeat": {
+    "deployment_pods_two_projects_present": true,
+    "native_source_build": "passed",
+    "install_launch": "passed",
+    "same_owned_simulator": true,
+    "source_pbx_restored_exactly": true,
+    "public_config_preserved": true
+  },
+  "runtime": {
+    "owned_simulator": true,
+    "metro_reused": true,
+    "existing_checkout_preserved": true,
+    "own_metro_restart_after_sdk_update": true
+  }
+}

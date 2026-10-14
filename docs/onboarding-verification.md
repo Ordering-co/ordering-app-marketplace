@@ -9,7 +9,7 @@ Local evidence recorded on 2026-10-14 from the public product worktree at base `
 - Configured development onboarding blocks SDK mounting until public project validation and local tenant migration complete. Its project cannot come from a remembered `project_name`. Credentials from an unmarked or different destination are retired only from known SDK keys; unrelated preferences remain, and recoverable non-authenticated tenant cache is archived only in this app's AsyncStorage.
 - In configured development, the selected source project is used without a demo fallback or a remembered root-point selection; Release keeps its original flags and legacy project/session behavior.
 - Non-development/Release builds bypass the new validation and migration before any public request or storage read, preserving source flags and legacy numeric franchise IDs. The native Firebase exception remains Debug + Simulator + explicit opt-in only.
-- `package.json` enforces Node >=20.19.4. Pods use React Native's existing minimum iOS version instead of the obsolete iOS 12 floor, while preserving higher targets. **Only `PODFILE CHECKSUM` changed in `Podfile.lock`; dependency entries, versions, sources and pins stayed identical.** `yarn.lock`, `Gemfile.lock`, the SDK gitlink, licensing and native identifiers stayed unchanged.
+- `package.json` enforces Node >=20.19.4. Pods use React Native's existing minimum iOS version instead of the obsolete iOS 12 floor, while preserving higher targets. **Only `PODFILE CHECKSUM` changed in `Podfile.lock`; dependency entries, versions, sources and pins stayed identical.** `yarn.lock`, `Gemfile.lock`, licensing and native identifiers stayed unchanged. The SDK update came from the upstream integration described below.
 
 ## Checks observed
 
@@ -67,4 +67,23 @@ The principal observed the real app and its selected `orderingv1` project on the
 
 During anonymous-clone QA, upstream Customer main advanced to `9ff9d2d45d1e9a1c67c75d705efe429defc74140`, including SDK gitlink `e1222c32a8eaeb6999ab1df52cb10dfa844d7888` and checkout changes. The integration preserved both upstream code and onboarding changes. With the updated SDK, frozen Yarn install, all 35 Node onboarding/manifest/adapter tests, the full 1,061-test suite in 276 suites, lint (0 errors) and both translation checks passed. TypeScript still reports 346 diagnostics; a read-only compiler host using upstream main source versions reproduced exactly the same 346, so onboarding added no diagnostics.
 
-The earlier anonymous Customer clone at `3ca849c5a41bef5a713ad6ce9a730410fe75313a` built and launched from new DerivedData, but that evidence is explicitly for the earlier source SHA and does not verify this integration's final native binary. The clean clone will be updated to the integrated commit and revalidated; no previous app binary is substituted for a source build.
+The earlier anonymous Customer clone at `3ca849c5a41bef5a713ad6ce9a730410fe75313a` built and launched from new DerivedData, but that evidence is explicitly for the earlier source SHA and does not verify this integration's final native binary. The clean clone was updated to the integrated commit and revalidated as recorded below; no previous app binary was substituted for a source build.
+
+
+## Repeat native setup
+
+After a local preview has generated its ignored simulator project, CocoaPods sees two app projects in `ios/`. The Podfile explicitly selects the original source project using CocoaPods' [documented project selector](https://guides.cocoapods.org/syntax/podfile.html#project). Repeating `pod install --deployment` with both projects present passed; dependency entries, versions, sources and pins remained byte-identical after the mechanical Podfile checksum update. CocoaPods' incidental source-project serialization was restored to its exact prior bytes.
+
+The integrated Customer [CI run 38654091153](https://github.com/Ordering-co/ordering-app-marketplace/actions/runs/38654091153) failed at `yarn exec tsc --noEmit` with the recorded 346 upstream diagnostics. Earlier helper, translation and lint steps passed. CI is not green; the read-only comparison against upstream main `9ff9d2d45d1e9a1c67c75d705efe429defc74140` reproduced exactly the same diagnostics, and new onboarding files added none. No type-check settings or CI checks were weakened.
+
+## Anonymous public clone verification
+
+The anonymous Customer clone was fast-forwarded to `745944207b7b72bc1153304d1ed9878053ff8b51` with pinned SDK `e1222c32a8eaeb6999ab1df52cb10dfa844d7888`. Frozen Yarn and deployment Pods passed, as did all 35 Node tests and 28 native onboarding tests. Public detect/configure/doctor confirmed `orderingv1` without app authentication. Repeating configure preserved a changed app name, a nested unknown field and all other source settings. A new DerivedData directory compiled the updated source; no earlier binary was copied. Install/launch reused only this clone's verified simulator and Metro.
+
+Central QA observed the real Home screen and `orderingv1` header, then observed “My clean Customer edit” after the isolated banner text edit without a subsequent reload. Two earlier edits were not reflected and were not counted. Restarting only this checkout's verified Metro with `--reset-cache`, followed by a separate baseline reload, re-established updates after the SDK fast-forward. That baseline reload was not counted as Fast Refresh. The subsequent visible edit passed, and the component was restored to its exact saved bytes. [Sanitized results](onboarding-clean-verification.json) distinguish these observations. No consumer login, guest account creation or order action occurred.
+
+![Clean clone before the visible edit](images/customer-clean-before.png)
+
+![Clean clone after Fast Refresh](images/customer-clean-after.png)
+
+The final repeat used published source `cc2ecb383dde1d692e788c37ab0aadd1171b5ca0`, including the explicit CocoaPods source-project selector. With both original and generated projects present, `pod install --deployment` passed without moving either project. Configure preserved the same personalization, and the adapter again compiled sources, installed and launched while reusing this clone's verified simulator and Metro. Source-project serialization was restored exactly afterward. The visible-edit images above correspond to the preceding integrated JavaScript source; this final selector change did not change JavaScript behavior.
