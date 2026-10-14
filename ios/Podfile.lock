@@ -2010,7 +2010,7 @@ PODS:
     - FBSDKGamingServicesKit (~> 18.0)
     - FBSDKShareKit (~> 18.0)
     - React-Core
-  - react-native-forter (1.4.5):
+  - react-native-forter (1.4.6):
     - ForterSDK (~> 3.1.5)
     - React-Core
   - react-native-geolocation (3.4.0):
@@ -2058,7 +2058,7 @@ PODS:
     - React (< 1.0.0, >= 0.13.0)
   - react-native-restart (0.0.27):
     - React-Core
-  - react-native-safe-area-context (5.6.2):
+  - react-native-safe-area-context (5.8.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2076,8 +2076,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.6.2)
-    - react-native-safe-area-context/fabric (= 5.6.2)
+    - react-native-safe-area-context/common (= 5.8.0)
+    - react-native-safe-area-context/fabric (= 5.8.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -2088,7 +2088,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-safe-area-context/common (5.6.2):
+  - react-native-safe-area-context/common (5.8.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2116,7 +2116,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-safe-area-context/fabric (5.6.2):
+  - react-native-safe-area-context/fabric (5.8.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3604,7 +3604,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 1ead4fe154df3b1ba34b5a9e35ef3c4bdfa72ccb
   react-native-date-picker: e8dec4d656e43d06df9e3d230ad3cc9370e1758d
   react-native-fbsdk-next: 52f81e60eb3e8e0e06cf9728b4572d3509ca9d01
-  react-native-forter: 1abb4de05ae04b656469f9aa49a95d381a7e113c
+  react-native-forter: e1b4e85da5b4fcd9ad3a4f918ee00838540b6f2c
   react-native-geolocation: 95e48fe2687e5a8280103085372fa62c2297c5d6
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-google-maps: 3f7351899e92a500d1d3515461c423fc04192b06
@@ -3613,7 +3613,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-onesignal: ab800900cffeca4d9db70a05244013fc8a36ceb8
   react-native-restart: 0bc732f4461709022a742bb29bcccf6bbc5b4863
-  react-native-safe-area-context: c00143b4823773bba23f2f19f85663ae89ceb460
+  react-native-safe-area-context: ebd2c2ece5e6e650a6963184039ec8cfd8960d86
   react-native-splash-screen: 95994222cc95c236bd3cdc59fe45ed5f27969594
   react-native-version-check: c7b4269cd18781b51009fa4b5a8ad9ab5131ce6f
   react-native-webview: ec195db71ebf55705d7b46a7da5f1b1746bb7efd

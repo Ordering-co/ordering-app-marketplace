@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
+  private var initialLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
 
   func application(
     _ application: UIApplication,
@@ -28,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    window = UIWindow(frame: UIScreen.main.bounds)
+    initialLaunchOptions = launchOptions
 
     // Initialize Facebook SDK
     ApplicationDelegate.shared.application(
@@ -52,15 +53,80 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       IntercomModule.initialize(intercomApiKey, withAppId: intercomAppId)
     }
 
+    return true
+  }
+
+  func startReactNative(in window: UIWindow, connectionOptions: UIScene.ConnectionOptions) {
+    guard let factory = reactNativeFactory else {
+      preconditionFailure("React Native must be initialized before connecting a scene")
+    }
+    self.window = window
+    var launchOptions = initialLaunchOptions ?? [:]
+
+    // Cold links are read by Linking.getInitialURL, not emitted again as URL events.
+    if let context = connectionOptions.urlContexts.first {
+      launchOptions.removeValue(forKey: .url)
+      launchOptions.removeValue(forKey: .userActivityDictionary)
+      let options = Self.openURLOptions(for: context)
+      if !ApplicationDelegate.shared.application(
+        UIApplication.shared, open: context.url, options: options
+      ) {
+        launchOptions[.url] = context.url
+        if let sourceApplication = context.options.sourceApplication {
+          launchOptions[.sourceApplication] = sourceApplication
+        }
+        if let annotation = context.options.annotation {
+          launchOptions[.annotation] = annotation
+        }
+      }
+    } else if let activity = connectionOptions.userActivities.first(where: {
+      $0.activityType == NSUserActivityTypeBrowsingWeb && $0.webpageURL != nil
+    }) {
+      launchOptions.removeValue(forKey: .url)
+      if ApplicationDelegate.shared.application(UIApplication.shared, continue: activity) {
+        launchOptions.removeValue(forKey: .userActivityDictionary)
+      } else {
+        launchOptions[.userActivityDictionary] = [
+          "UIApplicationLaunchOptionsUserActivityTypeKey": activity.activityType,
+          "UIApplicationLaunchOptionsUserActivityKey": activity
+        ]
+      }
+    }
+
     factory.startReactNative(
       withModuleName: "ReactNativeAppsTemplate5",
       in: window,
       launchOptions: launchOptions
     )
-
+    initialLaunchOptions = nil
     RNSplashScreen.show()
+  }
 
-    return true
+  static func openURLOptions(for context: UIOpenURLContext) -> [UIApplication.OpenURLOptionsKey: Any] {
+    var options: [UIApplication.OpenURLOptionsKey: Any] = [
+      .openInPlace: context.options.openInPlace
+    ]
+    if let sourceApplication = context.options.sourceApplication {
+      options[.sourceApplication] = sourceApplication
+    }
+    if let annotation = context.options.annotation {
+      options[.annotation] = annotation
+    }
+    return options
+  }
+
+  func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
+    if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+       ApplicationDelegate.shared.application(application, continue: userActivity) {
+      return true
+    }
+    return RCTLinkingManager.application(
+      application, continue: userActivity, restorationHandler: restorationHandler
+    )
   }
 
   // Manejo de URLs para deep linking y Facebook
