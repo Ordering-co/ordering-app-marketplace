@@ -14,8 +14,8 @@ A bare React Native project for Android and iOS. React Native 0.81.1, React 19.1
 ## Get the source
 
 ```sh
-git clone --recurse-submodules https://github.com/Ordering-co/ordering-app-marketplace-v26.git
-cd ordering-app-marketplace-v26
+git clone --recurse-submodules https://github.com/Ordering-co/ordering-app-marketplace.git
+cd ordering-app-marketplace
 yarn install --frozen-lockfile
 ```
 

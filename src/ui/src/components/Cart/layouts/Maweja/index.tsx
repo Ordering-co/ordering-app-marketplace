@@ -73,7 +73,7 @@ const serviceFeeFor = (cart: any) => (
 )
 
 const MawejaProduct = (props: any) => {
-  const { product, cart, changeQuantity, getProductMax, removeProduct } = props
+  const { product, cart, changeQuantity, getProductMax, removeProduct, isCartPending } = props
   const theme = useTheme()
   const [, t] = useLanguage()
   const [{ parsePrice, optimizeImage }] = useUtils()
@@ -103,7 +103,7 @@ const MawejaProduct = (props: any) => {
             </OText>
             <OText size={16} weight="bold" color={brand} mTop={6}>{parsePrice(product?.total || product?.price)}</OText>
           </View>
-          {removeProduct && (
+          {removeProduct && !isCartPending && (
             <OAlert
               title={t('DELETE_PRODUCT', 'Delete Product')}
               message={t('QUESTION_DELETE_PRODUCT', 'Are you sure that you want to delete the product?')}
@@ -114,9 +114,11 @@ const MawejaProduct = (props: any) => {
           )}
         </ProductTop>
         <Stepper>
-          <StepButton testID={`maweja-qty-minus-${product?.id}`} onPress={() => setQty(quantity - 1)} disabled={quantity <= 1}>
-            <Ionicons name="remove" size={18} color={theme.colors.textSecondary} />
-          </StepButton>
+          {!isCartPending && (
+            <StepButton testID={`maweja-qty-minus-${product?.id}`} onPress={() => setQty(quantity - 1)} disabled={quantity <= 1}>
+              <Ionicons name="remove" size={18} color={theme.colors.textSecondary} />
+            </StepButton>
+          )}
           <QuantityValue>
             <OText
               size={16}
@@ -128,9 +130,11 @@ const MawejaProduct = (props: any) => {
               {quantity}
             </OText>
           </QuantityValue>
-          <StepButton testID={`maweja-qty-plus-${product?.id}`} $square onPress={() => setQty(quantity + 1)} disabled={quantity >= max}>
-            <Ionicons name="add" size={18} color={theme.colors.white} />
-          </StepButton>
+          {!isCartPending && (
+            <StepButton testID={`maweja-qty-plus-${product?.id}`} $square onPress={() => setQty(quantity + 1)} disabled={quantity >= max}>
+              <Ionicons name="add" size={18} color={theme.colors.white} />
+            </StepButton>
+          )}
         </Stepper>
       </ProductBody>
     </ProductRow>
@@ -144,6 +148,8 @@ export const MawejaCartSection = (props: any) => {
   const [{ user }] = useSession()
   const [comment, setComment] = useState(cart?.comment || '')
   const brand = themeBrandColor(theme)
+  // The API rejects any change to a cart with a payment in progress
+  const isCartPending = cart?.status === 2
 
   const onComment = (value: string) => {
     setComment(value)
@@ -170,9 +176,10 @@ export const MawejaCartSection = (props: any) => {
             changeQuantity={changeQuantity}
             getProductMax={getProductMax}
             removeProduct={removeProduct}
+            isCartPending={isCartPending}
           />
         ))}
-        {!!cart?.business?.slug && (
+        {!!cart?.business?.slug && !isCartPending && (
           <AddMore
             testID="maweja-add-products"
             onPress={() => onNavigationRedirect?.('Business', { store: cart.business.slug })}
@@ -192,6 +199,7 @@ export const MawejaCartSection = (props: any) => {
           onChangeText={onComment}
           placeholder={t('SPECIAL_COMMENTS', 'Special Comments')}
           placeholderTextColor={theme.colors.textSecondary}
+          editable={!isCartPending}
           multiline
         />
       </SectionCard>
@@ -224,6 +232,9 @@ export const MawejaCartPage = (props: any) => {
     sum + (cart?.products || []).reduce((qty: number, product: any) => qty + (product?.quantity || 0), 0)
   ), 0)
   const primaryCart = carts.length === 1 ? carts[0] : null
+  // The API rejects any change to a cart with a payment in progress
+  const clearableCarts = carts.filter((cart: any) => cart?.status !== 2)
+  const isPrimaryCartPending = !!primaryCart && !clearableCarts.length
   const isDelivery = deliveryTypes.includes(orderState?.options?.type)
   const address = orderState?.options?.address?.address
   const brand = themeBrandColor(theme)
@@ -318,11 +329,11 @@ export const MawejaCartPage = (props: any) => {
               {`${itemCount} ${t(itemCount === 1 ? 'PRODUCT' : 'PRODUCTS', itemCount === 1 ? 'Product' : 'Products')}`}
             </OText>
           </HeaderCopy>
-          {carts.length > 0 && (
+          {clearableCarts.length > 0 && (
             <OAlert
               title={t('CLEAR_CART', 'Clear Cart')}
               message={t('QUESTION_CLEAR_CART', 'Are you sure that you want to clear the cart?')}
-              onAccept={() => carts.forEach((cart: any) => clearCart(cart?.uuid))}
+              onAccept={() => clearableCarts.forEach((cart: any) => clearCart(cart?.uuid))}
             >
               <ClearButton testID="maweja-cart-clear">
                 <Ionicons name="trash-outline" size={20} color={brand} />
@@ -423,7 +434,7 @@ export const MawejaCartPage = (props: any) => {
                 <OText size={14}>{parsePrice(serviceFee)}</OText>
               </TotalRow>
             )}
-            {couponEnabled && primaryCart && (
+            {couponEnabled && primaryCart && !isPrimaryCartPending && (
               <CouponControl
                 businessId={primaryCart.business_id}
                 price={primaryCart.total}
@@ -537,15 +548,17 @@ export const MawejaCartList = (props: any) => {
                 <OText size={15} weight="bold" color={brand}>{parsePrice(cart?.total)}</OText>
                 <Ionicons name="chevron-forward" size={18} color={theme.colors.textSecondary} style={{ marginLeft: 8 }} />
               </TouchableOpacity>
-              <OAlert
-                title={t('CLEAR_CART', 'Clear Cart')}
-                message={t('QUESTION_CLEAR_CART', 'Are you sure that you want to clear the cart?')}
-                onAccept={() => clearCart(cart?.uuid)}
-              >
-                <ClearButton testID={`maweja-cart-row-clear-${cart.uuid}`}>
-                  <Ionicons name="trash-outline" size={18} color={brand} />
-                </ClearButton>
-              </OAlert>
+              {cart?.status !== 2 && (
+                <OAlert
+                  title={t('CLEAR_CART', 'Clear Cart')}
+                  message={t('QUESTION_CLEAR_CART', 'Are you sure that you want to clear the cart?')}
+                  onAccept={() => clearCart(cart?.uuid)}
+                >
+                  <ClearButton testID={`maweja-cart-row-clear-${cart.uuid}`}>
+                    <Ionicons name="trash-outline" size={18} color={brand} />
+                  </ClearButton>
+                </OAlert>
+              )}
             </CartListCard>
           )
         })}

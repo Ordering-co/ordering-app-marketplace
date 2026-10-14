@@ -43,6 +43,7 @@ import { isStripeDirectMissingSource } from '../Checkout/isStripeDirectMissingSo
 import { CheckoutStudentDetails } from '../CheckoutStudentDetails'
 import { doesAnySchoolCartNeedStudent, isSchoolCart } from '../CheckoutStudentDetails/schoolCartStudent'
 import { useBusinessVerticals } from '../../hooks/useBusinessVerticals'
+import { useGuestCheckoutPermission } from '../../../../hooks/useGuestCheckoutPermission'
 
 import {
   OText,
@@ -125,7 +126,11 @@ const MultiCheckoutUI = (props: any) => {
   const configTypes = configs?.order_types_allowed?.value.split('|').map((value: any) => Number(value)) || []
   const isPreOrder = configs?.preorder_status_enabled?.value === '1'
   const isMultiDriverTips = configs?.checkout_multi_business_enabled?.value === '1'
-  const isGuestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
+  const { guestCheckoutAllowed, guestOrderBlocked, canUseGuestCheckout, canPlaceOrder } = useGuestCheckoutPermission({
+    configs,
+    orderType: options?.type,
+    user
+  })
 
   const walletCarts = (Object.values(carts)?.filter((cart: any) => cart?.products && cart?.products?.length && cart?.status !== 2 && cart?.valid_schedule && cart?.valid_products && cart?.valid_address && cart?.valid_maximum && cart?.valid_minimum && cart?.wallets?.length > 0) || null) || []
   const cartsToShow = openCarts?.length > 0 ? openCarts : cartsInvalid
@@ -180,6 +185,9 @@ const MultiCheckoutUI = (props: any) => {
   const [methodPaySupported, setMethodPaySupported] = useState({ enabled: false, message: null, loading: true })
   const methodsPay = ['global_google_pay', 'global_apple_pay']
   const [assignedStudents, setAssignedStudents] = useState<Record<string, any>>({})
+  useEffect(() => {
+    if (!guestCheckoutAllowed) setAllowedGuest(false)
+  }, [guestCheckoutAllowed])
   const businessVerticals = useBusinessVerticals((openCarts || []).map((cart: any) => cart?.business_id))
   const studentCarts = (openCarts || []).map((cart: any) => {
     const contextCart = carts?.[`businessId:${cart?.business_id}`]
@@ -209,7 +217,7 @@ const MultiCheckoutUI = (props: any) => {
     schoolNeedsStudent ||
     walletCarts.length > 0
     || (methodsPay.includes(paymethodSelected?.gateway) && (!methodPaySupported.enabled || methodPaySupported.loading)) || openCarts?.length === 0 ||
-    (!isGuestCheckoutEnabled && !!user?.guest_id)
+    guestOrderBlocked
 
   const vibrateApp = (impact?: HapticFeedbackTypes) => {
     const options = {
@@ -281,6 +289,7 @@ const MultiCheckoutUI = (props: any) => {
   }
 
   const handlePlaceOrder = (confirmPayment?: any) => {
+    if (!canPlaceOrder()) return
     if (schoolNeedsStudent) return
     if (stripePaymethods.includes(paymethodSelected?.gateway) && user?.guest_id) {
       setOpenModal({ ...openModal, signup: true, isGuest: true })
@@ -304,6 +313,7 @@ const MultiCheckoutUI = (props: any) => {
   }
 
   const handlePlaceOrderAsGuest = () => {
+    if (!canPlaceOrder(true)) return
     if (schoolNeedsStudent) return
     setIsOpen(false)
     handleGroupPlaceOrder && handleGroupPlaceOrder()
@@ -450,7 +460,7 @@ const MultiCheckoutUI = (props: any) => {
 
           <ChSection>
             <ChUserDetails>
-              {(user?.guest_id && !allowedGuest) ? (
+              {(user?.guest_id && (!allowedGuest || !guestCheckoutAllowed)) ? (
                 <View>
                   <OText size={14} numberOfLines={1} ellipsizeMode='tail' color={theme.colors.textNormal}>
                     {t('CUSTOMER_DETAILS', 'Customer details')}
@@ -467,12 +477,12 @@ const MultiCheckoutUI = (props: any) => {
                     style={{ borderRadius: 7.6, marginTop: 20 }}
                     onClick={() => setOpenModal({ ...openModal, signup: true })}
                   />
-                  {isGuestCheckoutEnabled && (
+                  {guestCheckoutAllowed && (
                     <OButton
                       text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
                       class='secondary'
                       style={{ borderRadius: 7.6, marginTop: 20 }}
-                      onClick={() => setAllowedGuest(true)}
+                      onClick={() => canUseGuestCheckout() && setAllowedGuest(true)}
                     />
                   )}
                 </View>
@@ -715,7 +725,7 @@ const MultiCheckoutUI = (props: any) => {
               {t('WARNING_INVALID_PRODUCTS_CHECKOUT', 'To continue with your checkout, please remove from your cart the products that are not available.')}
             </OText>
           )}
-          {(!isGuestCheckoutEnabled && !!user?.guest_id) && (
+          {guestOrderBlocked && (
             <OText
               color={theme.colors.error}
               size={12}
@@ -775,6 +785,7 @@ const MultiCheckoutUI = (props: any) => {
               requiredFields={requiredFields}
               checkoutFields={checkoutFields}
               onClose={() => {
+                if (!canPlaceOrder()) return
                 setIsOpen(false)
                 handlePlaceOrder()
               }}

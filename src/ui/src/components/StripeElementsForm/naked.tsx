@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useApi, useSession, useToast, ToastType, useWebsocket } from '@components';
+import { getCardsGateway, isBusinessCardsGateway } from '../../utils/stripeCardsGateway';
 
 export const StripeElementsForm = (props: any) => {
   const {
@@ -13,12 +14,20 @@ export const StripeElementsForm = (props: any) => {
   const [{ token }] = useSession();
   const socket = useWebsocket();
   const [, { showToast }] = useToast();
+  const cardsGateway = getCardsGateway(props.cardsGateway);
   const [state, setState] = useState<any>({ loading: false, loadingAdd: false, error: null, requirements: null });
   const [publicKeyState, setPublicKeyState] = useState({ key: props.publicKey, loading: true, error: null })
+  const requirementsRequest = useRef(0)
 
   const getRequirements = async () => {
+    const request = ++requirementsRequest.current
     if (!toSave) return
-    const url = `${ordering.root}/payments/stripe/requirements?type=add_card`
+    // v2 credentials are per business; do not ask until that id exists
+    if (isBusinessCardsGateway(cardsGateway) && !props.businessId) return
+    const businessParam = isBusinessCardsGateway(cardsGateway) && props.businessId
+      ? `&business_id=${encodeURIComponent(props.businessId)}`
+      : ''
+    const url = `${ordering.root}/payments/${cardsGateway}/requirements?type=add_card${businessParam}`
     try {
       setState((prev: any) => ({ ...prev, loading: true }))
       const requestOptions = {
@@ -33,6 +42,7 @@ export const StripeElementsForm = (props: any) => {
       }
       const response = await fetch(url, requestOptions)
       const json = await response.json();
+      if (request !== requirementsRequest.current) return
       setState((prev: any) => ({
         ...prev,
         loading: false,
@@ -40,6 +50,7 @@ export const StripeElementsForm = (props: any) => {
         error: json?.error ? json.result : null
       }))
     } catch (error) {
+      if (request !== requirementsRequest.current) return
       setState((prev: any) => ({
         ...prev,
         loading: false,
@@ -51,13 +62,13 @@ export const StripeElementsForm = (props: any) => {
   const stripeTokenHandler = async (tokenId: string, user: any, targetBusinessId: string, isNewCard: any = true) => {
     const body = {
       business_id: targetBusinessId,
-      gateway: 'stripe',
+      gateway: cardsGateway,
       token_id: tokenId,
       user_id: user?.id
     }
     try {
       setState((prev: any) => ({ ...prev, loadingAdd: true }))
-      const result = await fetch(`${ordering.root}/payments/stripe/cards`, {
+      const result = await fetch(`${ordering.root}/payments/${cardsGateway}/cards`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -112,7 +123,7 @@ export const StripeElementsForm = (props: any) => {
   const getCredentials = async () => {
     try {
       setPublicKeyState((prev: any) => ({ ...prev, loading: true }))
-      const { content: { result, error } } = await ordering.setAccessToken(token).paymentCards().getCredentials()
+      const { content: { result, error } } = await ordering.setAccessToken(token).paymentCards(undefined, undefined, null, cardsGateway).getCredentials()
       if (!error) {
         setPublicKeyState({
           loading: false,
@@ -146,12 +157,17 @@ export const StripeElementsForm = (props: any) => {
     } else {
       getCredentials()
     }
-  }, [token, props.publicKey])
+  }, [token, props.publicKey, cardsGateway])
 
   useEffect(() => {
-    if (!token || state.requirements) return
+    if (!token || !toSave) return
+    if (isBusinessCardsGateway(cardsGateway) && !props.businessId) {
+      requirementsRequest.current += 1
+      setState((prev: any) => ({ ...prev, loading: false, requirements: null }))
+      return
+    }
     getRequirements()
-  }, [token])
+  }, [token, toSave, cardsGateway, props.businessId])
 
   return (
     <UIComponent

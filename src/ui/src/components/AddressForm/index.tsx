@@ -46,7 +46,19 @@ import {
   GoogleMap,
   OText
 } from '@ui';
-import GooglePlacesTextInput from 'react-native-google-places-textinput';
+import GooglePlacesTextInput, { GooglePlacesTextInputStyles } from 'react-native-google-places-textinput';
+import { LegacyPlacesInput } from './LegacyPlacesInput';
+import {
+  PLACES_API_LEGACY,
+  PLACES_API_NEW,
+  NEW_PLACE_DETAILS_FIELDS,
+  getPlacesApiMode,
+  setPlacesApiMode,
+  switchToLegacyPlacesApi,
+  isPlacesApiNotEnabledError,
+  newDetailsToLegacy,
+  fetchLegacyDetails,
+} from './googlePlaces';
 
 const inputNames = [
   { name: 'address', code: 'Address' },
@@ -54,13 +66,6 @@ const inputNames = [
   { name: 'zipcode', code: 'Zipcode' },
   { name: 'address_notes', code: 'Address notes' },
 ];
-
-const googleFields = [
-  'place_id',
-  'formatted_address',
-  'geometry/location',
-  'address_components',
-].join(',')
 
 const AddressFormUI = (props: AddressFormParams) => {
   const {
@@ -174,6 +179,7 @@ const AddressFormUI = (props: AddressFormParams) => {
     formState.changes?.address ||
     addressState.address.address ||
     '')
+  const [placesApiMode, setPlacesApiModeState] = useState(getPlacesApiMode())
 
   const googleInput: any = useRef(null);
   const internalNumberRef: any = useRef(null);
@@ -437,6 +443,81 @@ const AddressFormUI = (props: AddressFormParams) => {
     updateChanges(addressSelected);
   };
 
+  const handleSelectGoogleDetails = (details: any) => {
+    const data = {
+      description: details?.formatted_address,
+      address: details?.formatted_address,
+      place_id: details?.place_id
+    }
+    handleChangeAddress(data, details)
+    setAutoCompleteAddress(true)
+  }
+
+  const handleGooglePlaceSelect = async (place: any) => {
+    setPlacesApiMode(PLACES_API_NEW)
+    try {
+      const details = newDetailsToLegacy(place?.details) ??
+        await fetchLegacyDetails({ placeId: place?.placeId, apiKey: googleMapsApiKey })
+      handleSelectGoogleDetails(details)
+    } catch (error) {
+      console.log('onFail', error)
+    }
+  }
+
+  const handleGooglePlacesError = (error: any) => {
+    if (getPlacesApiMode() !== PLACES_API_NEW && isPlacesApiNotEnabledError(error)) {
+      switchToLegacyPlacesApi()
+      setPlacesApiModeState(PLACES_API_LEGACY)
+      return
+    }
+    setAlertState({
+      open: true,
+      content: getTraduction(error, t),
+    })
+  }
+
+  const handleGoogleTextChange = (text: string) => {
+    if (!isFirstTime) {
+      handleChangeInput({
+        target: { name: 'address', value: text },
+      });
+      setValue('address', text);
+      setGoogleAddressValue(text)
+      setAutoCompleteAddress(true)
+    }
+    setIsFirstTime(false);
+  }
+
+  const googlePlacesInputStyle: GooglePlacesTextInputStyles = {
+    suggestionsContainer: {
+      borderBottomStartRadius: 15,
+      borderBottomEndRadius: 15,
+      elevation: 2,
+      borderWidth: 1,
+      borderColor: '#ddd',
+    },
+    suggestionItem: {
+      backgroundColor: '#fff',
+    },
+    container: {
+      zIndex: 100,
+      marginBottom: 24
+    },
+    input: {
+      borderWidth: 1,
+      borderRadius: 7.6,
+      borderColor: autoCompleteInputFocused ? theme.colors.primary : theme.colors.border,
+      flexGrow: 1,
+      fontSize: 15,
+      paddingLeft: 16,
+      paddingRight: 32,
+      paddingVertical: 12,
+      minHeight: 50,
+      height: 'auto',
+      fontFamily: 'Poppins-Regular',
+    },
+  }
+
   const handleChangeAddressMapbox = (address: any) => {
     updateChanges(address);
   };
@@ -644,80 +725,40 @@ const AddressFormUI = (props: AddressFormParams) => {
                         />
                       )}
                     </View>
-                  ) : (
-                    <GooglePlacesTextInput
+                  ) : placesApiMode === PLACES_API_LEGACY ? (
+                    <LegacyPlacesInput
                       placeHolderText={t('ADD_ADDRESS', 'Add a address')}
                       apiKey={googleMapsApiKey}
                       value={googleAddressValue}
-                      fetchDetails
-                      showClearButton={false}
-                      showLoadingIndicator={false}
                       includedRegionCodes={countryCode && countryCode !== '*' ? [countryCode] : undefined}
                       ref={googleInput}
-                      onPlaceSelect={async (place: any) => {
-                        try {
-                          const res = await fetch(
-                            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place?.placeId}&key=${googleMapsApiKey}&fields=${encodeURIComponent(googleFields)}`
-                          )
-                          const json = await res.json()
-                          const details = json?.result
-                          const data = {
-                            description: details?.formatted_address,
-                            address: details?.formatted_address,
-                            place_id: details?.place_id
-                          }
-                          handleChangeAddress(data, details)
-                          setAutoCompleteAddress(true)
-                        } catch (error) {
-                          console.log('onFail', error)
-                        }
-                      }}
+                      onPlaceSelect={handleSelectGoogleDetails}
                       onFocus={() => setAutoCompleteAddress(true)}
                       onBlur={() => setAutoCompleteAddress(false)}
                       onError={(error) => setAlertState({
                         open: true,
                         content: getTraduction(error, t),
                       })}
-                      onTextChange={(text) => {
-                        if (!isFirstTime) {
-                          handleChangeInput({
-                            target: { name: 'address', value: text },
-                          });
-                          setValue('address', text);
-                          setGoogleAddressValue(text)
-                          setAutoCompleteAddress(true)
-                        }
-                        setIsFirstTime(false);
-                      }}
-                      style={{
-                        suggestionsContainer: {
-                          borderBottomStartRadius: 15,
-                          borderBottomEndRadius: 15,
-                          elevation: 2,
-                          borderWidth: 1,
-                          borderColor: '#ddd',
-                        },
-                        suggestionItem: {
-                          backgroundColor: '#fff',
-                        },
-                        container: {
-                          zIndex: 100,
-                          marginBottom: 24
-                        },
-                        input: {
-                          borderWidth: 1,
-                          borderRadius: 7.6,
-                          borderColor: autoCompleteInputFocused ? theme.colors.primary : theme.colors.border,
-                          flexGrow: 1,
-                          fontSize: 15,
-                          paddingLeft: 16,
-                          paddingRight: 32,
-                          paddingVertical: 12,
-                          minHeight: 50,
-                          height: 'auto',
-                          fontFamily: 'Poppins-Regular',
-                        },
-                      }}
+                      onTextChange={handleGoogleTextChange}
+                      style={googlePlacesInputStyle}
+                    />
+                  ) : (
+                    <GooglePlacesTextInput
+                      placeHolderText={t('ADD_ADDRESS', 'Add a address')}
+                      apiKey={googleMapsApiKey}
+                      value={googleAddressValue}
+                      fetchDetails
+                      detailsFields={NEW_PLACE_DETAILS_FIELDS}
+                      showClearButton={false}
+                      showLoadingIndicator={false}
+                      includedRegionCodes={countryCode && countryCode !== '*' ? [countryCode] : undefined}
+                      ref={googleInput}
+                      onPlaceSelect={handleGooglePlaceSelect}
+                      onFocus={() => setAutoCompleteAddress(true)}
+                      onBlur={() => setAutoCompleteAddress(false)}
+                      onError={handleGooglePlacesError}
+                      onTextChange={handleGoogleTextChange}
+                      style={googlePlacesInputStyle}
                     />
                   )}
                 />

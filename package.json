@@ -4,12 +4,12 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Ordering-co/ordering-app-marketplace-v26.git"
+    "url": "git+https://github.com/Ordering-co/ordering-app-marketplace.git"
   },
   "bugs": {
-    "url": "https://github.com/Ordering-co/ordering-app-marketplace-v26/issues"
+    "url": "https://github.com/Ordering-co/ordering-app-marketplace/issues"
   },
-  "homepage": "https://github.com/Ordering-co/ordering-app-marketplace-v26",
+  "homepage": "https://github.com/Ordering-co/ordering-app-marketplace",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",

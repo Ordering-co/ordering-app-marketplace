@@ -14,7 +14,7 @@ import {
 } from '@components';
 import { Checkout, NavBar, SafeAreaViewWrapper } from '@ui';
 
-const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect', 'google_pay', 'apple_pay'];
+const stripePaymentOptions = ['stripe', 'stripe_direct', 'stripe_connect', 'stripe_connect_v2', 'google_pay', 'apple_pay'];
 
 interface Config {
   key: string;

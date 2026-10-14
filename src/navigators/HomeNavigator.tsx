@@ -43,7 +43,7 @@ import LoyaltyPoints from '../pages/LoyaltyPoints';
 import GiftCards from '../pages/GiftCards';
 
 import { useSession, useOrder, useConfig } from '@components';
-import { orderTypeList } from '@ui';
+import { isGuestCheckoutAllowed } from '../utils/guestCheckout';
 import { getHomeDeepLinkPlan } from './getHomeDeepLinkPlan';
 
 const Stack = createStackNavigator();
@@ -65,10 +65,7 @@ const HomeNavigator = (e: any) => {
 
   const cartUuid = route?.params?.cartUuid;
 
-  const guestCheckoutEnabled =
-    configs?.guest_checkout_enabled?.value === '1' &&
-    (!orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])) &&
-    user?.guest_id
+  const guestCheckoutEnabled = isGuestCheckoutAllowed(configs, orderState?.options?.type) && user?.guest_id
 
   const handleConnectivityChange = (state: any) => {
     setConnectionState({ connection_status: state.isConnected });

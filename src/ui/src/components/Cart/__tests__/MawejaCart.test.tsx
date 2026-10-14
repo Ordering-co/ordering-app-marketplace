@@ -8,6 +8,8 @@ import { renderWithProviders } from '../../../../../../jest/helpers/renderWithPr
 
 const onNavigationRedirect = jest.fn()
 const mockSession: any = { auth: true, user: { name: 'Chris', email: 'chris@example.com', cellphone: '0814058638' } }
+const mockCartPatch: any = {}
+const mockClearCart = jest.fn()
 
 jest.mock('../../CartStudentAlert', () => ({ CartStudentAlert: () => null }))
 jest.mock('../../CouponControl', () => ({ CouponControl: () => null }))
@@ -48,9 +50,9 @@ jest.mock('@components', () => {
       handleChangeComment: jest.fn()
     }) : null,
     useOrder: () => [{
-      carts: { a: cart, b: otherCart },
+      carts: { a: { ...cart, ...mockCartPatch }, b: otherCart },
       options: { type: 1, address: { address: 'Hotel Pullman, Gombe' } }
-    }, { clearCart: jest.fn() }],
+    }, { clearCart: mockClearCart }],
     useLanguage: () => [null, (_key: string, fallback: string) => fallback],
     useSession: () => [mockSession],
     useUtils: () => [{ parsePrice: (value: number) => `$${value}`, optimizeImage: (value: string) => value }],
@@ -116,5 +118,43 @@ describe('Maweja cart', () => {
 
     fireEvent.press(getByTestId('maweja-cart-row-cart-1'))
     expect(push).toHaveBeenCalledWith('Cart', { businessSlug: 'burger-guys' })
+  })
+
+  describe('with a cart pending of payment', () => {
+    beforeEach(() => {
+      mockCartPatch.status = 2
+    })
+
+    afterEach(() => {
+      delete mockCartPatch.status
+    })
+
+    it('shows the cart without the controls the API rejects and keeps the way to its checkout', () => {
+      const { getByTestId, getByText, queryByTestId } = renderWithProviders(
+        <MawejaCartPage
+          businessSlug="burger-guys"
+          navigation={{ canGoBack: () => true, goBack: jest.fn() }}
+          onNavigationRedirect={onNavigationRedirect}
+        />
+      )
+
+      expect(getByText('Buffalo Ranch Chicken')).toBeTruthy()
+      expect(queryByTestId('maweja-cart-clear')).toBeNull()
+      expect(queryByTestId('maweja-add-products')).toBeNull()
+      expect(queryByTestId('maweja-qty-minus-9')).toBeNull()
+      expect(queryByTestId('maweja-qty-plus-9')).toBeNull()
+      expect(getByTestId('maweja-cart-comment').props.editable).toBe(false)
+      expect(getByTestId('maweja-cart-checkout')).toBeTruthy()
+    })
+
+    it('only lets the other carts be cleared from the list', () => {
+      const { getByTestId, queryByTestId } = renderWithProviders(
+        <MawejaCartList navigation={{ canGoBack: () => true, goBack: jest.fn(), push: jest.fn() }} />
+      )
+
+      expect(getByTestId('maweja-cart-row-cart-1')).toBeTruthy()
+      expect(queryByTestId('maweja-cart-row-clear-cart-1')).toBeNull()
+      expect(getByTestId('maweja-cart-row-clear-cart-2')).toBeTruthy()
+    })
   })
 })

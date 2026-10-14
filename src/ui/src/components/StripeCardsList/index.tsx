@@ -179,6 +179,7 @@ export const StripeCardsListUI = (props: any) => {
           <StripeElementsForm
             toSave={props.toSave}
             gateway={gateway}
+            cardsGateway={props.cardsGateway ?? gateway}
             openCarts={props.openCarts}
             businessId={props.businessId}
             businessIds={props.businessIds}

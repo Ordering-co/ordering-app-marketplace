@@ -53,7 +53,7 @@ import {
   useSelectedStudent
 } from '@components';
 
-import { orderTypeList } from '../../utils';
+import { isGuestCheckoutAllowed } from '../../../../utils/guestCheckout'
 import { ActionButton } from './ActionButton'
 import { ExtraOptions } from './ExtraOptions'
 
@@ -204,8 +204,8 @@ export const ProductOptionsUI = (props: any) => {
   const [viewedProduct, setViewedProduct] = useState<any>(null)
   const [showProductNameInHeader, setShowProductNameInHeader] = useState(false)
   const [productTitleLayout, setProductTitleLayout] = useState<any>(null)
-  const guestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
-  const orderTypeEnabled = !orderTypeList[orderState?.options?.type - 1] || configs?.allowed_order_types_guest_checkout?.value?.includes(orderTypeList[orderState?.options?.type - 1])
+  const guestCheckoutEnabled = isGuestCheckoutAllowed(configs, orderState?.options?.type)
+  const orderTypeEnabled = guestCheckoutEnabled
 
   const optionsLength = product?.extras?.reduce((acc: number, extras: any) => acc + extras?.options?.length, 0) + (!!product?.ingredients?.length ? 1 : 0)
 
@@ -272,6 +272,7 @@ export const ProductOptionsUI = (props: any) => {
   };
 
   const handleUpdateGuest = async () => {
+    if (!isGuestCheckoutAllowed(configs, orderState?.options?.type)) return
     const guestToken = uuid.v4()
     if (guestToken) {
       await handleCreateGuestUser({ guest_token: guestToken })

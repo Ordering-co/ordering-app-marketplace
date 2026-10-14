@@ -12,7 +12,9 @@ import { parseCartPaymethodData, REDIRECT_PAYMETHODS } from '../../../../utils';
 import { parseDriverTipOptions } from './parseDriverTipOptions';
 import { parseReservationSetting } from './parseReservationSetting';
 import { isStripeDirectMissingSource } from './isStripeDirectMissingSource';
+import { getCardsGateway } from '../../utils/stripeCardsGateway';
 import { handleCheckoutHardwareBack } from './handleCheckoutHardwareBack';
+import { useCartPlacedHere } from './useCartPlacedHere';
 import { giftCartStatePatch, shouldLeaveGiftCheckoutWhenCartMissing } from '../../../../utils/giftCardCart';
 import { doesSchoolCartNeedStudent, isSchoolCart as isSchoolCartCheck } from '../CheckoutStudentDetails/schoolCartStudent';
 
@@ -21,8 +23,11 @@ import { BusinessDetailsComponent } from './BusinessDetails';
 import { Summary as SummaryComponent } from './Summary';
 import { DeliveryOptionsComponent } from './DeliveryOptions';
 import { CheckoutLoginForm } from './CheckoutLoginForm';
+import { PendingCartNotice } from './PendingCartNotice';
 import { resolveAppDesign } from '@/utils/appDesign';
 import { isGuestOrderBlocked as guestOrderBlocked, showContinueAsGuest } from './isGuestOrderBlocked';
+import { isGuestCheckoutAllowed as checkGuestCheckoutAllowed } from '@/utils/guestCheckout'
+import { useGuestCheckoutPermission } from '../../../../hooks/useGuestCheckoutPermission'
 import { CheckoutSectionOrder, MawejaCardTitle, MawejaCartNotice, PaySection } from './layouts/Maweja';
 import { Card, CardBody } from './layouts/Maweja/styles';
 
@@ -127,6 +132,9 @@ const CheckoutUI = (props: any) => {
     braintreeIFrameUrl,
     cybersourceIFrameUrl,
     createBusinessUserPaymethod,
+    isPendingCartReleasable,
+    releasingPendingCart,
+    handleReleasePendingCart,
   } = props
   const cart = orderCart ?? cartState?.cart
 
@@ -164,10 +172,13 @@ const CheckoutUI = (props: any) => {
   const [cardList, setCardList] = useState<any>({ cards: [], loading: false, error: null })
   const [isGiftCardCart, setIsGiftCardCart] = useState(cart != null && cart.business_id == null)
   const [userHasCards, setUserHasCards] = useState(false)
+  const [isPaymentAttemptCancelled, setIsPaymentAttemptCancelled] = useState(false)
+  const isCartPlacedHere = useCartPlacedHere(placing)
   const cardsMethods = ['credomatic']
   const redirectPaymethods = ['stripe_checkout', 'epayco', 'checkout_pro_mercadopago']
-  const stripePaymethods: any = ['stripe', 'stripe_connect', 'stripe_redirect']
-  const cardsPaymethods: any = ['stripe', 'stripe_connect']
+  const stripePaymethods: any = ['stripe', 'stripe_connect', 'stripe_connect_v2', 'stripe_redirect']
+  const cardsPaymethods: any = ['stripe', 'stripe_connect', 'stripe_connect_v2']
+  const stripeCardsMethods: any = ['stripe', 'stripe_connect_v2']
   const notFields = ['coupon', 'driver_tip', 'mobile_phone', 'address', 'zipcode', 'address_notes', 'comments']
 
   const checkoutFields = useMemo(() => checkoutFieldsState?.fields?.filter((field: any) => field.order_type_id === options?.type), [checkoutFieldsState, options])
@@ -182,7 +193,16 @@ const CheckoutUI = (props: any) => {
   const isWalletCashEnabled = businessConfigs.find((config: any) => config.key === 'wallet_cash_enabled')?.value === '1'
   const isWalletCreditPointsEnabled = businessConfigs.find((config: any) => config.key === 'wallet_credit_point_enabled')?.value === '1'
   const isWalletEnabled = configs?.cash_wallet?.value && isWalletConfigEnabled(configs) && (isWalletCashEnabled || isWalletCreditPointsEnabled)
-  const isGuestCheckoutEnabled = configs?.guest_checkout_enabled?.value === '1'
+  const isGuestCheckoutEnabled = checkGuestCheckoutAllowed(configs, options?.type)
+  const { guestCheckoutAllowed, canUseGuestCheckout, canPlaceOrder } = useGuestCheckoutPermission({
+    configs,
+    orderType: options?.type,
+    user,
+    requiresAccount: isMaweja
+  })
+  useEffect(() => {
+    if (!guestCheckoutAllowed) setAllowedGuest(false)
+  }, [guestCheckoutAllowed])
   const isGuestOrderBlocked = guestOrderBlocked({
     guestId: user?.guest_id,
     isGuestCheckoutEnabled,
@@ -194,13 +214,17 @@ const CheckoutUI = (props: any) => {
   const creditPointPlan = loyaltyPlansState?.result?.find((loyal: any) => loyal.type === 'credit_point')
   const creditPointPlanOnBusiness = creditPointPlan?.businesses?.find((b: any) => b.business_id === cart?.business_id && b.accumulates)
   const methodsPay = ['google_pay', 'apple_pay']
+  const cartPaymethod = businessDetails?.business?.paymethods?.find((pm: any) => pm?.paymethod_id === cart?.paymethod_id)?.paymethod
+  const cartStatusCancelMessage = isPaymentAttemptCancelled
+    ? t('PAYMENT_ATTEMPT_CANCELLED', 'The payment attempt was cancelled. Choose a payment method to try again.')
+    : t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')
 
   const commentDelayTime = 1500
   const allowDriverTipPickup = configs?.driver_tip_allowed_at_pickup?.value === '1' && pickupTypes.includes(options?.type)
   const validateCommentsCartField = (guestCheckoutComment?.enabled && (user?.guest_id ? guestCheckoutComment?.required_with_guest : guestCheckoutComment?.required)) && (cart?.comment === null || cart?.comment?.trim().length === 0)
   const validateDriverTipField = (deliveryTypes.includes(options?.type) || allowDriverTipPickup) && (guestCheckoutDriveTip?.enabled && (user?.guest_id ? guestCheckoutDriveTip?.required_with_guest : guestCheckoutDriveTip?.required)) && (Number(cart?.driver_tip) <= 0)
   const validateCouponField = (guestCheckoutCoupon?.enabled && (user?.guest_id ? guestCheckoutCoupon?.required_with_guest : guestCheckoutCoupon?.required)) && !cart?.offers?.some((offer: any) => offer?.type === 2)
-  const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && paymethodSelected?.gateway === 'stripe' && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
+  const validateZipcodeCard = (guestCheckoutZipcode?.enabled && (user?.guest_id ? guestCheckoutZipcode?.required_with_guest : guestCheckoutZipcode?.required)) && stripeCardsMethods.includes(paymethodSelected?.gateway) && paymethodSelected?.data?.card && !paymethodSelected?.data?.card?.zipcode
 
   const businessConfig = businessDetails?.business?.configs?.find((config: any) => config?.key === 'reservation_setting')
 
@@ -286,6 +310,7 @@ const CheckoutUI = (props: any) => {
   }
 
   const handlePlaceOrder = (confirmPayment: any, forcePlace: boolean = false) => {
+    if (!canPlaceOrder()) return
     if (isGuestOrderBlocked) return
     if (schoolNeedsStudent) return
     if (stripePaymethods.includes(paymethodSelected?.gateway) && user?.guest_id) {
@@ -324,6 +349,7 @@ const CheckoutUI = (props: any) => {
   }
 
   const handlePlaceOrderAsGuest = () => {
+    if (!canPlaceOrder(true)) return
     if (isGuestOrderBlocked) return
     if (schoolNeedsStudent) return
     setIsOpen(false)
@@ -453,6 +479,10 @@ const CheckoutUI = (props: any) => {
   useEffect(() => {
     onFailPaypal()
   }, [showGateway.closedByUser])
+
+  useEffect(() => {
+    if (cart?.status === 2) setIsPaymentAttemptCancelled(false)
+  }, [cart?.status])
 
   const HeaderTitle = (props: any) => {
     const { text } = props
@@ -614,7 +644,7 @@ const CheckoutUI = (props: any) => {
                     <PlaceholderLine height={20} width={89} style={{ marginBottom: 8 }} />
                   </Placeholder>
                 ) : (
-                  (user?.guest_id && !allowedGuest) ? (
+                  (user?.guest_id && (!allowedGuest || !guestCheckoutAllowed)) ? (
                     <View>
                       <HeaderTitle text={t('CUSTOMER_DETAILS', 'Customer details')} />
                       <OButton
@@ -629,12 +659,12 @@ const CheckoutUI = (props: any) => {
                         style={{ borderRadius: 15, marginTop: 20 }}
                         onClick={() => setOpenModal({ ...openModal, signup: true })}
                       />
-                      {continueAsGuestVisible && (
+                      {continueAsGuestVisible && guestCheckoutAllowed && (
                         <OButton
                           text={t('CONTINUE_AS_GUEST', 'Continue as guest')}
                           class='secondary'
                           style={{ borderRadius: 15, marginTop: 20 }}
-                          onClick={() => setAllowedGuest(true)}
+                          onClick={() => canUseGuestCheckout() && setAllowedGuest(true)}
                         />
                       )}
                     </View>
@@ -681,17 +711,16 @@ const CheckoutUI = (props: any) => {
             <ChSection style={{ paddingBottom: 20 }}>
               <ChErrors style={isMaweja ? { alignItems: 'stretch' } : undefined}>
                 {cart?.status === 2 && (
-                  isMaweja
-                    ? cartMessage(t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app'))
-                    : (
-                      <OText
-                        style={{ textAlign: 'center' }}
-                        color={theme.colors.error}
-                        size={17}
-                      >
-                        {t('CART_STATUS_PENDING_MESSAGE_APP', 'Your order is being processed, please wait a little more. if you\'ve been waiting too long, please reload the app')}
-                      </OText>
-                    )
+                  <PendingCartNotice
+                    isMaweja={isMaweja}
+                    isPlacedHere={placing || isCartPlacedHere}
+                    paymethodName={cartPaymethod?.gateway && t(cartPaymethod.gateway.toUpperCase(), cartPaymethod?.name)}
+                    isPendingCartReleasable={isPendingCartReleasable}
+                    releasingPendingCart={releasingPendingCart}
+                    handleReleasePendingCart={handleReleasePendingCart}
+                    onOrderCreated={(order: any) => onNavigationRedirect('OrderDetails', { orderId: order.uuid, orderNumberId: order.id, isFromCheckout: true })}
+                    onReleased={() => setIsPaymentAttemptCancelled(true)}
+                  />
                 )}
               </ChErrors>
             </ChSection>
@@ -743,7 +772,7 @@ const CheckoutUI = (props: any) => {
                       color={theme.colors.error}
                       size={14}
                     >
-                      {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+                      {cartStatusCancelMessage}
                     </OText>
                   )}
                   <PaymentOptions
@@ -796,7 +825,7 @@ const CheckoutUI = (props: any) => {
                     color={theme.colors.error}
                     size={17}
                   >
-                    {t('CART_STATUS_CANCEL_MESSAGE', 'The payment has not been successful, please try again')}
+                    {cartStatusCancelMessage}
                   </OText>
                 )}
                 <PaymentOptions
@@ -1033,6 +1062,7 @@ const CheckoutUI = (props: any) => {
                 hideUpdateButton
                 handlePlaceOrderAsGuest={handlePlaceOrderAsGuest}
                 onClose={() => {
+                  if (!canPlaceOrder()) return
                   setIsOpen(false)
                   if (paymethodClicked) {
                     setPaymethodClicked({
@@ -1267,7 +1297,7 @@ export const Checkout = (props: any) => {
         setStateValues({ carts: giftPatch })
       }
 
-      const publicKey = await getPublicKey();
+      const publicKey = await getPublicKey(result.paymethod_data?.gateway);
 
       if (result.status === 1 && result.order?.uuid) {
         onNavigationRedirect('OrderDetails', { orderId: result.order.uuid, orderNumberId: result.order.id, isFromCheckout: true });
@@ -1301,9 +1331,9 @@ export const Checkout = (props: any) => {
     }
   };
 
-  const getPublicKey = async () => {
+  const getPublicKey = async (gateway?: string) => {
     try {
-      const { content } = await ordering.setAccessToken(token).paymentCards().getCredentials();
+      const { content } = await ordering.setAccessToken(token).paymentCards(undefined, undefined, null, getCardsGateway(gateway)).getCredentials();
       return content.error ? null : content.result.publishable;
     } catch {
       return null;

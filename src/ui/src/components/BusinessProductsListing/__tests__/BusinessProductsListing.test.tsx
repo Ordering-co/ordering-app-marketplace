@@ -190,11 +190,11 @@ describe('BusinessProductsListing', () => {
   })
 
   describe('view order with multi-business checkout', () => {
-    const renderWithCarts = ({ multiEnabled, cartCount, minimum = 0 }: { multiEnabled: boolean, cartCount: number, minimum?: number }) => {
+    const renderWithCarts = ({ multiEnabled, cartCount, minimum = 0, storeCart = {}, otherCart = {} }: { multiEnabled: boolean, cartCount: number, minimum?: number, storeCart?: any, otherCart?: any }) => {
       const d = require('../../../../../../jest/helpers/m4MenuDefaults')
       const onNavigationRedirect = jest.fn()
       const carts: any = {
-        'businessId:1': { ...d.sampleCart, business: d.sampleBusiness, products: [d.sampleCartProduct], minimum }
+        'businessId:1': { ...d.sampleCart, business: d.sampleBusiness, products: [d.sampleCartProduct], minimum, ...storeCart }
       }
       if (cartCount > 1) {
         carts['businessId:2'] = {
@@ -202,7 +202,8 @@ describe('BusinessProductsListing', () => {
           uuid: 'cart-2',
           business_id: 2,
           business: { ...d.sampleBusiness, id: 2, slug: 'burger-place' },
-          products: [d.sampleCartProduct]
+          products: [d.sampleCartProduct],
+          ...otherCart
         }
       }
       ;(useConfig as jest.Mock).mockReturnValue([{
@@ -251,6 +252,33 @@ describe('BusinessProductsListing', () => {
 
       expect(UNSAFE_getByType(FloatingButton).props.disabled).toBe(true)
       expect(onNavigationRedirect).not.toHaveBeenCalledWith('Cart')
+    })
+
+    it.each([
+      { multiEnabled: false, cartCount: 2 },
+      { multiEnabled: true, cartCount: 2 },
+      { multiEnabled: true, cartCount: 1 }
+    ])('sends a pending cart to its own checkout when multi=$multiEnabled and carts=$cartCount', ({ multiEnabled, cartCount }) => {
+      const { UNSAFE_getByType, onNavigationRedirect } = renderWithCarts({ multiEnabled, cartCount, storeCart: { status: 2 } })
+
+      act(() => { UNSAFE_getByType(FloatingButton).props.handleClick() })
+
+      expect(onNavigationRedirect).toHaveBeenCalledTimes(1)
+      expect(onNavigationRedirect).toHaveBeenCalledWith('CheckoutPage', expect.objectContaining({ cartUuid: 'cart-1' }))
+    })
+
+    it('sends a cart placed together with other carts to their multi checkout', () => {
+      const pendingInGroup = { status: 2, group: { uuid: 'group-1' } }
+      const { UNSAFE_getByType, onNavigationRedirect } = renderWithCarts({
+        multiEnabled: true,
+        cartCount: 2,
+        storeCart: pendingInGroup,
+        otherCart: pendingInGroup
+      })
+
+      act(() => { UNSAFE_getByType(FloatingButton).props.handleClick() })
+
+      expect(onNavigationRedirect).toHaveBeenCalledWith('MultiCheckout', { cartUuid: 'group-1' })
     })
   })
 

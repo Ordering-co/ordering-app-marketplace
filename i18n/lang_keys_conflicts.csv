@@ -31,7 +31,7 @@ key,value,app_uses,submodule_uses
 "ORDERS","Orders",3,0
 "ORDERS","orders",1,0
 "ADD_ADDRESS","Add address",1,0
-"ADD_ADDRESS","Add a address",2,0
+"ADD_ADDRESS","Add a address",3,0
 "ERROR_UNKNOWN","An error occurred",1,0
 "ERROR_UNKNOWN","An error has occurred",1,0
 "REVIEW_ORDER","Review your Order",1,0

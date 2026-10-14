@@ -112,6 +112,16 @@ export const ChErrors = styled.View`
   margin-bottom: 20px;
 `
 
+export const PendingCartNoticeContent = styled.View`
+  width: 100%;
+  align-items: center;
+`
+
+export const PendingCartNoticeAction = styled.View`
+  width: 100%;
+  margin-top: 16px;
+`
+
 export const DeliveryOptionsContainer = styled.View`
   padding-bottom: 20px;
   border-bottom-width: 1px;
