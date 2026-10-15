@@ -1,6 +1,6 @@
 # Run your Ordering Marketplace app
 
-This runbook takes a fresh public clone to a configured consumer app and a visible edit. Work against your own development project. Setup reads public project data; it does not create accounts, publish an app or change backend data.
+This runbook takes a fresh checkout to a configured consumer app and a visible edit. Work against your own development project. Setup reads public project data; it does not create accounts, publish an app or change backend data.
 
 ## 1. Check the actual toolchain
 
@@ -64,12 +64,15 @@ Only the supported fields are changed:
 | Field | Purpose |
 | --- | --- |
 | `project` | Exact public project code |
+| `localProjectConfigured` | Explicit development opt-in written by configure; manual setup must deliberately set the boolean `true` |
 | `api.url` | HTTPS API origin; existing default is preserved unless supplied |
 | `api.version` | API version, for example `v400` |
 | `api.language` | API language, for example `en` |
 
 
 Every other field in `src/config.json` stays intact, including app/bundle IDs, `socket.url`, merchant ID, `businessSlug`, feature flags and root-point source settings. Configured development builds pin this project and disable the legacy root-point selector during onboarding. Release preserves the source root-point flag and existing project/session behavior. `src/config.js` derives runtime settings without rewriting the JSON.
+
+Review app name, language, API/socket endpoints and existing product flags in `src/config.json`; these identifiers and defaults do not grant backend access. `src/theme.json` holds colors and visual assets. `builder.json` describes native project/package identifiers, while `app.json` names the registered React Native component. Keep component names, schemes and native bundle/package IDs consistent with your own application registrations.
 
 ### Manual configuration and recovery
 
@@ -88,9 +91,9 @@ Backups belong to this checkout and may contain your existing private configurat
 
 The current native projects include Firebase and call its initialization during launch. **Normal native launches require your own Firebase app registrations**: supply `android/app/google-services.json` and `ios/GoogleService-Info.plist`. Include the iOS plist in the **ReactNativeAppsTemplate5** target and verify the resource path in Xcode. Match the native bundle/package IDs declared by `builder.json`, `app.json`, Android and Xcode. A project slug or `firebase.json` is not a Firebase registration. Do not use another customer's files or fabricate a plist just to turn a build green.
 
-Set your own restricted Maps keys in the Android manifest and iOS AppDelegate when using Maps. Use your own OneSignal app, app group and push entitlements; keep the notification extension and app target aligned. Apple device/release builds require your own team and signing profiles. Android release builds require your own signing keystore; the included standard `debug.keystore` is for local debug builds only.
+Set your own restricted Maps keys in the Android manifest and iOS AppDelegate when using Maps, and configure backend Google credentials where a feature requires them. Use your own OneSignal application and matching app-group values in both the app and notification-extension entitlement files. Apple device/release builds require your own development team and signing profiles. Android release builds require your own signing keystore; the included standard `debug.keystore` is for local debug builds only. `firebase.json` controls Firebase behavior; it is not a native Firebase registration.
 
-Facebook, Google sign-in, Intercom, Segment, Stripe/Apple Pay and Forter depend on the features enabled in your project. Configure your own public app registrations and restricted native service keys for those features; do not claim them tested just because the catalog loads. Existing placeholder guards stay in place. Keep private credentials, provisioning material and production keystores out of Git. The service registration paths and private signing formats are ignored.
+Facebook App ID/client token and URL scheme, Google sign-in IDs, Intercom app/native SDK keys, Segment settings and Stripe/Apple merchant registration, plus Forter identifiers, depend on the features enabled in your project. Configure your own public app registrations and restricted native service keys for those features; do not claim them tested just because the catalog loads. Existing placeholder guards stay in place. Keep private credentials, provisioning material and production keystores out of Git. The service registration paths and private signing formats are ignored.
 
 ## Local iOS simulator preview without Firebase
 
@@ -158,6 +161,23 @@ Native success means the APK/app was built and installed and an actual simulator
 
 In a configured development build or explicit local preview, `ProjectSetupGate` repeats public destination checks before the Ordering providers mount. Non-development/Release builds bypass this new gate before any public request or storage migration. Placeholder, mismatched project, unavailable franchise or network failure displays a clear setup screen with retry. No SDK session hydrates while that gate is closed.
 
+## Local checks and translations
+
+```sh
+node --test scripts/onboarding/*.test.mjs
+yarn test:onboarding
+yarn exec tsc --noEmit
+yarn lint:check
+yarn test:coverage --runInBand --watchman=false
+yarn test:coverage:summary --no-run
+yarn i18n:verify
+yarn i18n:check-generated
+```
+
+`yarn lint` applies automatic fixes; `lint:check` reports findings. Review existing TypeScript/lint diagnostics rather than changing dependency pins to hide them. Coverage follows `jest/coverage-include.js` and the repository summary's 70% gate; mocks and coverage do not verify native integrations or backend workflows. For a focused test file, use `yarn test PATH_TO_TEST --runInBand`.
+
+The locale catalog is `i18n/translations.json`. Run `yarn i18n:generate` to regenerate derived files and follow [i18n/README.md](i18n/README.md). Review English fallbacks in other locales before distribution. The default `i18n:sync` is a dry run; `i18n:sync:live` requires your own credentials and writes backend data.
+
 ## 6. Make one visible edit with Fast Refresh
 
 With the app open in development mode and Metro serving this checkout, enable Fast Refresh from the developer menu. Temporarily add a small `Text` element in `App.tsx`, above `ProjectSetupGate`, with the text **“My first Ordering edit”**; import `Text` from `react-native`. Save and verify the exact words appear on the device without rebuilding native code. Then remove that temporary element and verify it disappears. In the local preview, you can instead temporarily change “Local simulator” in `src/onboarding/local-project-banner.tsx`, verify the changed words and project/slug, then restore them. On the setup error screen, edit `setupTitle` in `src/project-setup-gate.tsx`.
@@ -209,3 +229,9 @@ Diagnose this app using setup.md and the current checkout. Run onboarding doctor
 ## Explicit development opt-in
 
 A historical `project` in the source configuration does not enable onboarding. Existing development and Release runs keep their original project selector, session and flags, and perform no new setup validation or storage migration. `configure` enables the development workflow with the source boolean `localProjectConfigured: true`; manual setup must deliberately set that exact boolean along with the public project/API settings (and an explicitly validated franchise for Franchise). The explicit `--without-firebase` simulator launch is its own opt-in and uses only ignored temporary configuration. Release always bypasses this development workflow. Restore the previous backup to undo the source opt-in exactly.
+
+## Project information and notices
+
+Customer-facing bare React Native app for Ordering.co. Customers browse businesses, build carts, check out and track orders.
+
+[Repository](https://github.com/Ordering-co/ordering-app-marketplace). Shared headless logic is the pinned [Ordering SDK](https://github.com/Finitless-com/ordering-components) at `src/@/components`; app UI is in `src/ui`, with screen wiring in `src/pages` and `src/navigators`. The SDK retains its [license](src/@/components/LICENSE); dependencies and bundled assets retain their own licenses and notices.
