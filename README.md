@@ -14,6 +14,8 @@ Get https://github.com/Ordering-co/ordering-app-marketplace.git, preserving any 
 
 ## Manual alternative
 
+The local preview selects the newest available compatible iOS runtime from the selected Xcode before considering a saved simulator. Use `--runtime 26.0` or its full installed runtime identifier only when you deliberately need that runtime; an invalid/incompatible selection fails without fallback. Existing simulators and ownership history are preserved. See [setup.md](setup.md#local-ios-simulator-preview-without-firebase) for details.
+
 Follow [setup.md](setup.md) for the pinned toolchains, native setup, the explicit local simulator preview without Firebase and troubleshooting. `configure` deliberately activates development onboarding with the source boolean `localProjectConfigured: true`; a historical project alone does not activate validation or session migration. Normal legacy development and Release keep their original selectors, flags and sessions.
 
 Customer mobile app: businesses, catalog, cart, checkout and order tracking.

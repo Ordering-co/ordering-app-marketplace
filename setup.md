@@ -106,6 +106,18 @@ The adapter validates that public project in a private temporary configuration, 
 
 `--api-url`, `--api-version` and `--language` supply the same public overrides as configure. `--franchise-slug` is required for Franchise. When your source already has another project, add `--confirm-project-change` deliberately; the adapter never supplies that confirmation automatically. `--port` selects a free Metro port, and `--derived-data` can point to a build cache that belongs to this checkout. `--prepare-only` validates and generates the local workspace without creating a simulator or starting Metro.
 
+Runtime selection happens before owned-device reuse. The adapter queries the selected Xcode through `xcrun --find simctl` and `simctl list runtimes/devicetypes/devices --json`. It orders available iOS runtime versions numerically, newest first, requires host architecture support and checks each iPhone type against the runtime's `supportedDeviceTypes` and type minimum/maximum runtime metadata. Older metadata without a whitelist must provide compatible type bounds; missing compatibility is not guessed. An older saved simulator never overrides this policy.
+
+Choose an installed runtime explicitly only when needed for reproduction:
+
+```sh
+yarn ordering:ios-local --without-firebase --project YOUR_PROJECT_SLUG --runtime 26.0
+# Equivalent exact identifier:
+yarn ordering:ios-local --without-firebase --project YOUR_PROJECT_SLUG --runtime com.apple.CoreSimulator.SimRuntime.iOS-26-0
+```
+
+An unavailable, ambiguous or incompatible explicit runtime fails without fallback or download. A saved UDID is reused only within the selected runtime when checkout/name, actual device name, availability and compatible type all match. Otherwise the adapter creates another owned simulator, preserving the previous device without shutdown, erase or deletion. Its exact ownership bytes are archived under `.ordering-setup/ios-local/simulator-history/`, with a warning. The current record includes runtime, device type and selected Xcode metadata. Runtime selection is separate from proving app startup, crash recovery or full app compatibility; inspect the real native screen and its diagnostics. Do not hide crashes by suppressing CrashReporter or restarting unrelated devices.
+
 The native opt-in is compiled only for Debug + iOS Simulator. Release and ordinary native launches ignore it and retain the normal Firebase setup. JavaScript verifies the native marker and development platform before accepting only the selected public fields. The local session identity differs from the normal app, so it cannot adopt a remembered consumer token. Firebase messaging, notification registration, automatic tracking/analytics and optional native provider initialization are skipped in this mode. Maps, location, payments, notifications and production integration behavior are not part of this preview; use your own registrations for those features.
 
 Logs and owned simulator/Metro records are in the private `.ordering-setup/ios-local/` directory. Repeating the adapter reuses a live Metro process only after matching its root, PID, command and port; it refuses to overwrite an unrelated live process record. A host with simulator runtimes but no Simulator GUI may run and capture the app headlessly; inspect an actual screenshot or device snapshot before claiming the UI appeared. Do not treat `simctl launch` or Metro status alone as that verification. The source JSON, normal iOS project and release path remain intact.
