@@ -1,3 +1,4 @@
+import { isLocalSimulatorMode } from '../onboarding/ios-local-mode';
 import React, { useState, useEffect, useRef } from 'react';
 import { AppState, Alert as NativeAlert, BackHandler, Linking, DeviceEventEmitter, Platform } from 'react-native';
 import VersionCheck from 'react-native-version-check'
@@ -113,6 +114,10 @@ const RootNavigator = () => {
   };
 
   const oneSignalSetup = async () => {
+    if (isLocalSimulatorMode()) {
+      setIsPushLoading({ loading: false });
+      return;
+    }
     const generation = ++oneSignalSetupGenerationRef.current
     oneSignalSetupInFlightRef.current = true
     setIsPushLoading({ loading: true });
@@ -195,6 +200,10 @@ const RootNavigator = () => {
   };
 
   const oneSignalTeardown = async () => {
+    if (isLocalSimulatorMode()) {
+      setIsPushLoading({ loading: false });
+      return;
+    }
     oneSignalSetupGenerationRef.current += 1
     didSetupOneSignalRef.current = false
     oneSignalSetupInFlightRef.current = false
@@ -240,6 +249,10 @@ const RootNavigator = () => {
   };
 
   const firebasePushSetup = async () => {
+    if (isLocalSimulatorMode()) {
+      setIsPushLoading({ loading: false });
+      return;
+    }
     const generation = ++firebaseSetupGenerationRef.current
     firebaseSetupInFlightRef.current = true
     setIsPushLoading({ loading: true });
@@ -346,6 +359,10 @@ const RootNavigator = () => {
   };
 
   const firebasePushTeardown = async () => {
+    if (isLocalSimulatorMode()) {
+      setIsPushLoading({ loading: false });
+      return;
+    }
     firebaseSetupGenerationRef.current += 1
     didSetupFirebaseRef.current = false
     firebaseSetupInFlightRef.current = false
@@ -457,6 +474,10 @@ const RootNavigator = () => {
   }, [orderStatus.options?.moment]);
 
   useEffect(() => {
+    if (isLocalSimulatorMode()) {
+      setIsPushLoading({ loading: false });
+      return;
+    }
     const firebaseEnabled = isFirebasePushEnabled(configs)
     const firebaseGate = {
       configsLoading,
@@ -493,6 +514,10 @@ const RootNavigator = () => {
   }, [configsLoading, configs?.onesignal_orderingapp_id?.value, configs?.firebase_push_enabled?.value, auth, hasConsented]);
 
   const subscribePushNotifications = async () => {
+    if (isLocalSimulatorMode()) {
+      setIsPushLoading({ loading: false });
+      return;
+    }
     setIsPushLoading({ loading: true });
     try {
       const url = `${ordering.root}/users/${user.id}/notification_tokens`

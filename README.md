@@ -1,5 +1,21 @@
 # Ordering Marketplace App
 
+Copy this single prompt into your coding assistant:
+
+```text
+Get https://github.com/Ordering-co/ordering-app-marketplace.git, preserving any existing checkout. Read setup.md and set up my project. Detect its connection or ask for its slug. Install the pinned dependencies and open the app; use the explicit local preview if Firebase files are missing. Verify the displayed project and one visible edit with Fast Refresh.
+```
+
+## Your three steps
+
+1. Paste the prompt above; your assistant follows [setup.md](setup.md).
+2. Confirm your Ordering project. Sign in to the developer connection only if needed; consumer login in the app is separate.
+3. Check the destination label in the local preview, then observe one visible edit through Fast Refresh.
+
+## Manual alternative
+
+Follow [setup.md](setup.md) for the pinned toolchains, native setup, the explicit local simulator preview without Firebase and troubleshooting. `configure` deliberately activates development onboarding with the source boolean `localProjectConfigured: true`; a historical project alone does not activate validation or session migration. Normal legacy development and Release keep their original selectors, flags and sessions.
+
 Customer mobile app: businesses, catalog, cart, checkout and order tracking.
 
 A bare React Native project for Android and iOS. React Native 0.81.1, React 19.1.0 and TypeScript.
@@ -23,6 +39,16 @@ The SDK is a submodule from `https://github.com/Finitless-com/ordering-component
 
 ## Configure your application
 
+Choose your public destination explicitly:
+
+```sh
+node scripts/onboarding/cli.mjs detect
+node scripts/onboarding/cli.mjs configure --project YOUR_PROJECT_SLUG
+node scripts/onboarding/cli.mjs doctor
+```
+
+Detection is separate from consumer login. Public validation confirms the destination, not project ownership or app authentication. If no developer connection is available, provide the exact project code manually. Manual edits must deliberately include `localProjectConfigured: true` as described in [setup.md](setup.md#explicit-development-opt-in).
+
 Edit `src/config.json` and replace `YOUR_PROJECT` with your project. Review `api`, `socket`, language, app name and product settings. Public identifiers and product options are defined in the source. `src/theme.json` contains the theme and visual assets.
 
 `builder.json`, `app.json`, Android/iOS projects and schemes must match your application identifiers. Set up your own bundle identifier, Apple team, provisioning profiles and signing in Xcode. Configure your own Android release signing; `android/app/debug.keystore` is the public debug template and must not be used to publish a production application.
@@ -42,9 +68,9 @@ yarn android
 For iOS, install Ruby dependencies and pods first:
 
 ```sh
-bundle install
+bundle _2.7.1_ install
 cd ios
-bundle exec pod install
+bundle _2.7.1_ exec pod install --deployment
 cd ..
 yarn ios
 ```
@@ -54,6 +80,8 @@ Running on a device requires your own permissions and services. Metro serves Jav
 ## Validate
 
 ```sh
+node --test scripts/onboarding/*.test.mjs
+yarn test:onboarding
 yarn lint:check
 yarn exec tsc --noEmit
 yarn test --runInBand

@@ -18,6 +18,10 @@ jobs:
       - run: yarn install --frozen-lockfile
         env:
           HUSKY: '0'
+      - name: Onboarding CLI contract
+        run: node --test scripts/onboarding/*.test.mjs
+      - name: Native onboarding gate
+        run: yarn test:onboarding
       - run: yarn i18n:verify
       - run: yarn i18n:check-generated
       - run: yarn lint:check

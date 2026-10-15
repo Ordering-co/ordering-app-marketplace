@@ -1,3 +1,4 @@
+import { isLocalSimulatorMode } from '../../onboarding/ios-local-mode';
 import React, { useState, useEffect, createContext } from 'react';
 import { Platform } from 'react-native';
 import {
@@ -22,6 +23,7 @@ export const PermissionsProvider = ({ children }: any) => {
   const [trackingStatus, setTrackingStatus] = useState<string | null>(null);
 
   const askNotificationsPermission = async () => {
+    if (isLocalSimulatorMode()) return;
     checkNotifications().then(({ status }) => {
       if (status === RESULTS.BLOCKED || status === RESULTS.DENIED) {
         requestNotifications(['alert']).then(({ status }) => {
@@ -34,6 +36,7 @@ export const PermissionsProvider = ({ children }: any) => {
   };
 
   const requestTrackingPermission = async () => {
+    if (isLocalSimulatorMode()) return;
     if (Platform.OS !== 'ios') return;
 
     try {

@@ -20,7 +20,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
-    FirebaseApp.configure()
+    // Explicit local onboarding is available only in a Debug simulator build.
+    // Normal and Release launches still initialize their own Firebase registration.
+#if DEBUG && targetEnvironment(simulator)
+    let orderingLocalSimulator = ProcessInfo.processInfo.environment["ORDERING_LOCAL_SIMULATOR"] == "1"
+#else
+    let orderingLocalSimulator = false
+#endif
+    UserDefaults.standard.set(orderingLocalSimulator, forKey: "OrderingLocalSimulatorMode")
+    UserDefaults.standard.removeObject(forKey: "OrderingLocalSimulatorConfig")
+    if orderingLocalSimulator,
+       let encoded = ProcessInfo.processInfo.environment["ORDERING_LOCAL_CONFIG"],
+       let data = encoded.data(using: .utf8),
+       let configuration = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+      UserDefaults.standard.set(configuration, forKey: "OrderingLocalSimulatorConfig")
+    }
+    if !orderingLocalSimulator {
+      FirebaseApp.configure()
+    }
+
 
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
@@ -32,19 +50,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     initialLaunchOptions = launchOptions
 
     // Initialize Facebook SDK
-    ApplicationDelegate.shared.application(
-      application,
-      didFinishLaunchingWithOptions: launchOptions
-    )
+    if !orderingLocalSimulator {
+      ApplicationDelegate.shared.application(
+        application,
+        didFinishLaunchingWithOptions: launchOptions
+      )
+    }
 
     // Configurar Google Maps API Key
-    GMSServices.provideAPIKey("_GOOGLE_MAPS_API_KEY_")
+    if !orderingLocalSimulator {
+      GMSServices.provideAPIKey("_GOOGLE_MAPS_API_KEY_")
+    }
 
     // Configurar Intercom
     let intercomApiKey = "_INTERCOM_API_KEY_"
     let intercomAppId = "_INTERCOM_APP_ID_"
 
-    if !intercomApiKey.isEmpty &&
+    if !orderingLocalSimulator && !intercomApiKey.isEmpty &&
        intercomApiKey != "none" &&
        !intercomApiKey.hasPrefix("_INTERCOM") &&
        !intercomAppId.isEmpty &&
@@ -156,7 +178,12 @@ class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
 
   override func bundleURL() -> URL? {
 #if DEBUG
-    RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+    if UserDefaults.standard.bool(forKey: "OrderingLocalSimulatorMode"),
+       let port = ProcessInfo.processInfo.environment["ORDERING_LOCAL_METRO_PORT"],
+       let number = Int(port), (1024...65535).contains(number) {
+      return URL(string: "http://127.0.0.1:\(number)/index.bundle?platform=ios&dev=true&minify=false")
+    }
+    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
 #else
     Bundle.main.url(forResource: "main", withExtension: "jsbundle")
 #endif

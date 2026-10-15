@@ -1,3 +1,4 @@
+import { isLocalSimulatorMode } from './onboarding/ios-local-mode';
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -303,8 +304,8 @@ const ConsentGatedAnalytics = () => {
   const { hasConsented } = useCookieConsent()
   return (
     <>
-      {hasConsented && <AnalyticsSegment />}
-      {hasConsented && <FacebookPixel />}
+      {hasConsented && !isLocalSimulatorMode() && <AnalyticsSegment />}
+      {hasConsented && !isLocalSimulatorMode() && <FacebookPixel />}
     </>
   )
 }
@@ -377,7 +378,7 @@ const TemplateApp = () => {
             <ConsentConfigSync />
             <ConsentUserSync />
             <ConsentGatedAnalytics />
-            <ForterInit />
+            {!isLocalSimulatorMode() && <ForterInit />}
             <NavigationContainer ref={navigationRef} linking={linking}>
               <CheckoutFieldsProvider>
                 <PermissionsProvider>

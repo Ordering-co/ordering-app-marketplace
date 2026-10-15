@@ -15,6 +15,8 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 platform :ios, min_ios_version_supported
+# Select the source project even when the ignored simulator copy exists.
+project 'ReactNativeAppsTemplate5.xcodeproj'
 prepare_react_native_project!
 
 setup_permissions(['AppTrackingTransparency', 'Notifications'])
@@ -80,9 +82,10 @@ target 'ReactNativeAppsTemplate5' do
         # Disable bitcode (no longer supported by Apple since Xcode 14)
         build_config.build_settings['ENABLE_BITCODE'] = 'NO'
 
-        # Fix iOS deployment target for all pods (minimum 12.0)
-        if build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 12.0
-          build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+        # Use React Native's minimum for every pod, including privacy bundles.
+        # Xcode 27 rejects the old iOS 12 floor; higher targets stay intact.
+        if build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < min_ios_version_supported.to_f
+          build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = min_ios_version_supported
         end
 
         # Configure modular headers for intercom-react-native
