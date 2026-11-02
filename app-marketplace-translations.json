@@ -280,6 +280,8 @@
     "DELIVERY_FAILED_BY_DRIVER": "Delivery Failed by driver",
     "DELIVERY_FEE": "Delivery Fee",
     "DELIVERY_OPTIONS": "Delivery options",
+    "DELIVERY_PIN": "Delivery PIN",
+    "DELIVERY_PIN_HELP": "Give this code to the driver when you receive your order",
     "DELIVERY_PREFERENCE": "Delivery Preference",
     "DELIVERY_TIME": "Delivery time",
     "DELIVERYA_V21": "Delivery address",

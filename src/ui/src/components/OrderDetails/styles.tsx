@@ -3,6 +3,8 @@ import { Image, Platform } from 'react-native'
 import Svg, { Defs, LinearGradient, Stop, Path, Filter, FeGaussianBlur, G, Text } from 'react-native-svg'
 import styled from 'styled-components/native'
 
+import OText from '../shared/OText'
+
 const androidBorderColor = 'rgba(0, 0, 0, 0.1)';
 
 export const OrderDetailsContainer = styled.ScrollView`
@@ -454,4 +456,18 @@ export const StarsContainer = styled.View`
 
 export const StarButton = styled.TouchableOpacity`
   padding: 4px;
+`;
+
+export const DeliveryPinWrapper = styled.View`
+  width: 100%;
+  align-items: center;
+  padding: 12px ${({ theme }: any) => theme.utils.margins.horizontal}px;
+  margin-bottom: 16px;
+  border-radius: ${({ theme }: any) => theme.utils.radius.l}px;
+  background-color: ${({ theme }: any) => theme.colors.white};
+`;
+
+export const DeliveryPinCode = styled(OText)`
+  letter-spacing: 8px;
+  margin-vertical: 4px;
 `;

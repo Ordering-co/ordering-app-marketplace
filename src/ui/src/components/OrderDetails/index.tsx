@@ -60,6 +60,7 @@ import { OrderDetailsParams } from '../../types';
 import { OrderEta } from './OrderEta'
 import { Bill } from './Bill'
 import { DynamicProgressBar } from './DynamicProgressBar'
+import { DeliveryPin } from './DeliveryPin'
 
 import {
   useLanguage,
@@ -117,6 +118,7 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
   const isReservation = order?.delivery_type === 9
 
   const isOrderCompleted = REORDER_STATUS.includes(parseInt(order?.status, 10))
+  const showDeliveryPin = !!order?.delivery_pin && order?.delivery_pin_status === 'requested' && !isOrderCompleted
   const orderDisplayTotal = (order?.summary?.total ?? order?.total ?? 0) + (isCustomOrder ? (declaredValue || 0) : 0)
   const hideOrderPrices = Number(orderDisplayTotal) === 0
 
@@ -336,6 +338,11 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
                       : order?.business?.name}
                   />
                 )}
+                {showDeliveryPin && (
+                  <OrderSection>
+                    <DeliveryPin pin={String(order.delivery_pin)} layout="maweja" />
+                  </OrderSection>
+                )}
                 <MawejaProgress
                   title={t('ORDER_PROGRESS', 'Progress')}
                   labels={[
@@ -352,6 +359,9 @@ export const OrderDetailsUI = (props: OrderDetailsParams) => {
             )}
             {!isOrderCompleted && !isMaweja && (
               <Header>
+                {showDeliveryPin && (
+                  <DeliveryPin pin={String(order.delivery_pin)} />
+                )}
                 <ProgressInfo>
                   <OText size={theme.utils.tsize.l} weight={600}>
                     {currentOrderStatusText}
